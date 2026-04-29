@@ -92,7 +92,7 @@ img{display:block}
   overflow-x:hidden;
   scroll-snap-type:y mandatory;
   scroll-behavior:smooth;
-  /* allow fixed children (nav, cursor, dots) to layer on top */
+  -webkit-overflow-scrolling:touch; /* smooth momentum scroll on iOS */
   position:relative;
 }
 a{cursor:none;text-decoration:none;color:inherit}
@@ -444,7 +444,7 @@ h2.sh{
 .tl-item:last-child{padding-bottom:0}
 
 .tl-dot{
-  position:absolute;left:-2.25rem;top:12px;
+  position:absolute;left:-2.5rem;top:12px;
   width:10px;height:10px;background:var(--gold);border-radius:50%;
   box-shadow:0 0 0 4px var(--gold-dim),0 0 16px var(--gold-glow);
 }
@@ -812,29 +812,47 @@ footer{
   .os-card{grid-template-columns:1fr}
 }
 @media(max-width:768px){
-  html{font-size:16px}
-  /* Disable snap on mobile: sections flow naturally */
-  #scroll-wrap{
-    scroll-snap-type:none;
-    height:auto;
-    overflow-y:auto;
-    overflow-x:hidden;
+  /* ---- Reset the desktop scroll-container approach ---- */
+  /* html and body were locked to 100% height with overflow:clip on desktop.
+     On mobile we go back to normal document flow. */
+  html{
+    font-size:16px;
+    height:auto;          /* not 100% — let it grow with content */
+    overflow-y:auto;      /* normal page scroll on html */
   }
+  body{
+    overflow:visible;     /* undo overflow:clip so page scrolls normally */
+    height:auto;
+  }
+
+  /* The snap wrapper becomes a plain flow container on mobile */
+  #scroll-wrap{
+    height:auto;
+    overflow:visible;
+    scroll-snap-type:none;
+  }
+
+  /* Hide custom cursor on touch devices */
+  #c-dot,#c-ring{display:none}
+
   nav{padding:.9rem 4vw}
   .nav-links{display:none}
   .sec{padding:5rem 5vw}
   .snap-page{height:auto;scroll-snap-align:none;scroll-snap-stop:unset}
   .snap-page.sec{padding:5rem 5vw}
-  #hero{height:auto;min-height:100svh}
+  #hero{height:auto;min-height:100svh;overflow:hidden}
+  #contact{position:relative}
+  #contact footer{position:relative;bottom:auto;left:auto;right:auto}
   .cg{grid-template-columns:1fr}
+  .os-card{grid-template-columns:1fr}
   .edu-row{grid-template-columns:1fr}
   .ct-cards{grid-template-columns:1fr}
   .hero-r{display:none}
-  footer{flex-direction:column;gap:.5rem;text-align:center}
   .affil{flex-direction:column;text-align:center}
   .certs-row{grid-template-columns:1fr}
+  .sk-grid{grid-template-columns:1fr}
   #side-nav{display:none}
-  #back-top{right:1.5rem}
+  #back-top{right:1.5rem;bottom:1.5rem}
 }
 </style>
 </head>
@@ -1496,11 +1514,22 @@ function toggleTheme(){
   document.getElementById('tlbl').textContent=dark?'Light':'Dark';
 }
 
-/* ---- Back to top — scroll the WRAP, not document ---- */
+/* ---- Back to top — works for both scroll containers ---- */
 function scrollToTop(){
-  wrap.scrollTo({top:0,behavior:'smooth'});
+  // On mobile wrap has overflow:visible so scroll the window instead
+  if(wrap.style.overflow==='visible' || getComputedStyle(wrap).overflow==='visible'){
+    window.scrollTo({top:0,behavior:'smooth'});
+  } else {
+    wrap.scrollTo({top:0,behavior:'smooth'});
+  }
 }
 const backTop=document.getElementById('back-top');
+
+/* Show back-top on window scroll (mobile fallback) */
+window.addEventListener('scroll',()=>{
+  if(window.scrollY>200) backTop.classList.add('visible');
+  else backTop.classList.remove('visible');
+});
 
 /* ---- Smooth anchor navigation inside scroll-wrap ---- */
 document.querySelectorAll('a[href^="#"]').forEach(a=>{
@@ -1537,9 +1566,10 @@ function animCount(el){
   })(performance.now());
 }
 
-/* ---- Intersection Observer — root is the scroll-wrap ---- */
+/* ---- Intersection Observer — root is wrap on desktop, viewport on mobile ---- */
 const done=new Set();
-const ioOpts={ root:wrap, threshold:0.35 };
+const isMobile=()=>window.innerWidth<=768;
+const ioRoot=()=>isMobile()?null:wrap;
 
 /* Section active tracking */
 const secObs=new IntersectionObserver(entries=>{
@@ -1557,7 +1587,7 @@ const secObs=new IntersectionObserver(entries=>{
       }
     }
   });
-}, ioOpts);
+},{ root:ioRoot(), threshold:0.35 });
 sections.forEach(s=>secObs.observe(s));
 
 /* Scroll-reveal + counters */
@@ -1569,7 +1599,7 @@ const revObs=new IntersectionObserver(entries=>{
       if(!done.has(el)){done.add(el);animCount(el)}
     });
   });
-},{ root:wrap, threshold:0.12, rootMargin:'0px 0px -40px 0px' });
+},{ root:ioRoot(), threshold:0.12, rootMargin:'0px 0px -40px 0px' });
 document.querySelectorAll('.rev').forEach(el=>revObs.observe(el));
 
 /* Stats strip counters */
@@ -1581,7 +1611,7 @@ if(strip){
         if(!done.has(el)){done.add(el);animCount(el)}
       });
     });
-  },{ root:wrap, threshold:0.4 }).observe(strip);
+  },{ root:ioRoot(), threshold:0.4 }).observe(strip);
 }
 
 /* ---- Stagger card children ---- */
