@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shihaaz Buhary — Senior Software Engineer and Architect</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=Outfit:wght@300;400;500;600&family=IBM+Plex+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+/* =====================================================
+   TOKENS
+   ===================================================== */
+[data-theme="dark"] {
+  --bg:         #0C0F16;
+  --bg2:        #111520;
+  --surface:    #161d2a;
+  --surface2:   #1c2535;
+  --border:     rgba(212,168,67,.12);
+  --border-md:  rgba(212,168,67,.28);
+  --border-hi:  rgba(212,168,67,.55);
+  --text-hi:    #F0EBE0;
+  --text:       #9EA8B8;
+  --text-lo:    #545A6A;
+  --gold:       #D4A843;
+  --gold-lt:    #EEC76A;
+  --gold-dim:   rgba(212,168,67,.10);
+  --gold-glow:  rgba(212,168,67,.22);
+  --shadow:     0 28px 72px rgba(0,0,0,.55);
+  --shadow-sm:  0 6px 24px rgba(0,0,0,.35);
+  --nav-bg:     rgba(12,15,22,.9);
+  --tag-bg:     #1c2535;
+  --stat-bg:    #131820;
+  --toggle-bg:  #1c2535;
+  --card-hover: #1c2535;
+}
+[data-theme="light"] {
+  --bg:         #F6F1E9;
+  --bg2:        #EDE8DF;
+  --surface:    #FFFFFF;
+  --surface2:   #F2ECE2;
+  --border:     rgba(30,40,80,.09);
+  --border-md:  rgba(30,40,80,.20);
+  --border-hi:  rgba(30,40,80,.38);
+  --text-hi:    #0C0F1A;
+  --text:       #3E4455;
+  --text-lo:    #8890A6;
+  --gold:       #9A6500;
+  --gold-lt:    #C8890A;
+  --gold-dim:   rgba(154,101,0,.08);
+  --gold-glow:  rgba(154,101,0,.18);
+  --shadow:     0 28px 72px rgba(30,40,80,.10);
+  --shadow-sm:  0 6px 24px rgba(30,40,80,.08);
+  --nav-bg:     rgba(246,241,233,.93);
+  --tag-bg:     #EDE8DF;
+  --stat-bg:    #FFFFFF;
+  --toggle-bg:  #DDD8CE;
+  --card-hover: #F2ECE2;
+}
+
+/* =====================================================
+   RESET
+   ===================================================== */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;font-size:16px}
+body{
+  background:var(--bg);color:var(--text);
+  font-family:'Outfit',sans-serif;font-weight:400;line-height:1.72;
+  overflow-x:hidden;
+  transition:background .4s,color .4s;
+  cursor:none;
+}
+a{cursor:none}
+button{cursor:none}
+
+/* Grain overlay */
+body::after{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:9000;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='250' height='250'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='250' height='250' filter='url(%23n)' opacity='.03'/%3E%3C/svg%3E");
+}
+
+/* Custom cursor */
+#c-dot,#c-ring{position:fixed;pointer-events:none;z-index:9999;top:0;left:0}
+#c-dot{
+  width:8px;height:8px;background:var(--gold);border-radius:50%;
+  transform:translate(-50%,-50%);
+  transition:width .15s,height .15s,background .3s;
+}
+#c-ring{
+  width:38px;height:38px;border:1.5px solid var(--gold);border-radius:50%;
+  transform:translate(-50%,-50%);opacity:.45;
+  transition:width .25s,height .25s,opacity .25s;
+}
+
+/* =====================================================
+   NAV
+   ===================================================== */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:500;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:1rem 5vw;
+  background:var(--nav-bg);
+  backdrop-filter:blur(18px) saturate(160%);
+  border-bottom:1px solid var(--border);
+  transition:background .4s,border-color .4s;
+}
+.nav-logo{
+  font-family:'Cormorant Garamond',serif;font-size:1.22rem;font-weight:600;
+  color:var(--text-hi);letter-spacing:.02em;transition:color .3s;
+}
+.nav-logo em{color:var(--gold);font-style:normal}
+.nav-links{display:flex;gap:2.4rem;list-style:none}
+.nav-links a{
+  font-family:'IBM Plex Mono',monospace;font-size:.67rem;
+  letter-spacing:.16em;text-transform:uppercase;
+  color:var(--text-lo);text-decoration:none;transition:color .2s;
+}
+.nav-links a:hover{color:var(--gold)}
+
+/* Theme toggle */
+.t-wrap{display:flex;align-items:center;gap:.65rem}
+.t-lbl{
+  font-family:'IBM Plex Mono',monospace;font-size:.6rem;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--text-lo);
+  transition:color .3s;
+}
+.t-track{
+  width:44px;height:24px;border-radius:100px;
+  background:var(--toggle-bg);border:1px solid var(--border-md);
+  position:relative;transition:background .3s,border-color .3s;
+}
+.t-thumb{
+  position:absolute;top:3px;left:3px;
+  width:16px;height:16px;border-radius:50%;background:var(--gold);
+  transition:transform .3s cubic-bezier(.4,0,.2,1),background .3s;
+}
+[data-theme="light"] .t-thumb{transform:translateX(20px)}
+
+/* =====================================================
+   HERO
+   ===================================================== */
+#hero{
+  min-height:100vh;padding-top:68px;
+  display:grid;grid-template-columns:1fr 400px;
+  position:relative;overflow:hidden;
+}
+/* Ambient glow */
+#hero::before{
+  content:'';position:absolute;
+  top:-20%;left:-10%;width:70%;height:140%;
+  background:radial-gradient(ellipse at 35% 45%,var(--gold-glow) 0%,transparent 65%);
+  pointer-events:none;
+}
+
+.hero-l{
+  display:flex;flex-direction:column;justify-content:center;
+  padding:5rem 3.5rem 12rem 10vw;position:relative;z-index:2;
+}
+
+.h-eyebrow{
+  display:flex;align-items:center;gap:.7rem;margin-bottom:1.6rem;
+  opacity:0;animation:up .65s .1s ease-out forwards;
+}
+.h-eline{width:36px;height:1px;background:var(--gold);opacity:.7}
+.h-etext{
+  font-family:'IBM Plex Mono',monospace;font-size:.67rem;
+  letter-spacing:.22em;text-transform:uppercase;color:var(--gold);
+}
+
+.h-name{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(3.6rem,6.5vw,7rem);font-weight:700;
+  line-height:.90;letter-spacing:-.025em;color:var(--text-hi);
+  opacity:0;animation:up .65s .22s ease-out forwards;
+}
+.h-name .gold-line{color:var(--gold);display:block}
+
+.h-badges{
+  margin-top:1.7rem;display:flex;flex-wrap:wrap;gap:.45rem;
+  opacity:0;animation:up .65s .34s ease-out forwards;
+}
+.hbadge{
+  font-family:'Outfit',sans-serif;font-size:.75rem;font-weight:500;
+  padding:.3rem .85rem;border:1px solid var(--border-md);
+  color:var(--text);background:var(--gold-dim);border-radius:3px;
+  transition:border-color .2s,color .2s;
+}
+
+.h-summary{
+  margin-top:1.8rem;max-width:510px;font-size:1.02rem;
+  font-weight:300;color:var(--text);line-height:1.82;
+  opacity:0;animation:up .65s .46s ease-out forwards;
+}
+
+.h-certs{
+  margin-top:1.8rem;display:flex;flex-wrap:wrap;gap:.5rem;
+  opacity:0;animation:up .65s .58s ease-out forwards;
+}
+.hcert{
+  display:flex;align-items:center;gap:.45rem;
+  font-family:'IBM Plex Mono',monospace;font-size:.6rem;
+  letter-spacing:.1em;text-transform:uppercase;
+  color:var(--gold);padding:.35rem .85rem;
+  border:1px solid var(--border-hi);background:var(--gold-dim);border-radius:2px;
+}
+.hcert::before{content:'✦';font-size:.5rem}
+
+.h-btns{
+  margin-top:2.4rem;display:flex;gap:.85rem;flex-wrap:wrap;
+  opacity:0;animation:up .65s .70s ease-out forwards;
+}
+.btn-a{
+  font-family:'Outfit',sans-serif;font-size:.82rem;font-weight:600;
+  letter-spacing:.05em;padding:.82rem 2.1rem;
+  background:var(--gold);color:#0C0F16;border:none;
+  text-decoration:none;display:inline-block;border-radius:3px;
+  transition:background .2s,transform .2s,box-shadow .2s;
+}
+.btn-a:hover{background:var(--gold-lt);transform:translateY(-2px);box-shadow:0 10px 28px var(--gold-glow)}
+.btn-b{
+  font-family:'Outfit',sans-serif;font-size:.82rem;font-weight:500;
+  letter-spacing:.05em;padding:.82rem 2.1rem;
+  border:1.5px solid var(--border-md);color:var(--text);
+  text-decoration:none;display:inline-block;border-radius:3px;
+  transition:border-color .2s,color .2s,transform .2s;
+}
+.btn-b:hover{border-color:var(--gold);color:var(--gold);transform:translateY(-2px)}
+
+/* Photo panel */
+.hero-r{
+  display:flex;align-items:center;justify-content:center;
+  position:relative;z-index:2;
+  opacity:0;animation:fi .9s .45s forwards;
+}
+.photo-wrap{position:relative;width:290px;height:360px}
+.photo-wrap::before{
+  content:'';position:absolute;top:-14px;left:-14px;right:14px;bottom:14px;
+  border:1.5px solid var(--border-hi);border-radius:4px;z-index:0;
+  transition:border-color .4s;
+}
+.photo-wrap::after{
+  content:'';position:absolute;bottom:-14px;right:-14px;top:14px;left:14px;
+  border:1.5px solid var(--border);border-radius:4px;z-index:0;
+  transition:border-color .4s;
+}
+.photo-img{
+  position:relative;z-index:1;width:100%;height:100%;
+  object-fit:cover;border-radius:4px;display:block;
+  filter:contrast(1.06) saturate(.88);
+  transition:filter .4s;
+}
+[data-theme="light"] .photo-img{filter:contrast(1) saturate(1)}
+
+.corner{position:absolute;width:18px;height:18px;z-index:3}
+.c-tl{top:0;left:0;border-top:2px solid var(--gold);border-left:2px solid var(--gold)}
+.c-tr{top:0;right:0;border-top:2px solid var(--gold);border-right:2px solid var(--gold)}
+.c-bl{bottom:0;left:0;border-bottom:2px solid var(--gold);border-left:2px solid var(--gold)}
+.c-br{bottom:0;right:0;border-bottom:2px solid var(--gold);border-right:2px solid var(--gold)}
+
+/* Stats strip */
+.stats-strip{
+  position:absolute;bottom:0;left:0;right:0;
+  display:grid;grid-template-columns:repeat(4,1fr);
+  border-top:1px solid var(--border);
+  opacity:0;animation:fi .7s .95s forwards;
+}
+.sc{
+  padding:1.6rem 2rem;border-right:1px solid var(--border);
+  background:var(--stat-bg);transition:background .4s;
+}
+.sc:last-child{border-right:none}
+.sn{
+  font-family:'Cormorant Garamond',serif;font-size:2.5rem;font-weight:700;
+  color:var(--gold);line-height:1;display:block;
+}
+.sl{
+  font-family:'IBM Plex Mono',monospace;font-size:.58rem;
+  letter-spacing:.14em;text-transform:uppercase;
+  color:var(--text-lo);margin-top:.2rem;display:block;
+}
+
+/* =====================================================
+   SECTIONS (shared)
+   ===================================================== */
+.sec{padding:7rem 10vw;position:relative;transition:background .4s}
+.sec-alt{background:var(--surface)}
+
+.ey{display:flex;align-items:center;gap:.7rem;margin-bottom:.7rem}
+.ey-line{width:30px;height:1px;background:var(--gold);opacity:.55}
+.ey-text{
+  font-family:'IBM Plex Mono',monospace;font-size:.63rem;
+  letter-spacing:.22em;text-transform:uppercase;color:var(--gold);
+}
+
+h2.sh{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(1.9rem,3.5vw,3.1rem);font-weight:700;
+  color:var(--text-hi);line-height:1.1;margin-bottom:3.5rem;
+}
+
+/* =====================================================
+   COMPETENCIES
+   ===================================================== */
+.cg{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:1px;background:var(--border);
+  border:1px solid var(--border);border-radius:5px;overflow:hidden;
+}
+.cc{
+  background:var(--bg);padding:2.2rem 1.9rem;position:relative;
+  overflow:hidden;transition:background .3s;
+}
+[data-theme="light"] .cc{background:var(--surface)}
+.cc:hover{background:var(--card-hover)}
+.cc-bar{
+  position:absolute;top:0;left:0;height:3px;width:0;
+  background:linear-gradient(to right,var(--gold),var(--gold-lt));
+  transition:width .42s cubic-bezier(.4,0,.2,1);
+}
+.cc:hover .cc-bar{width:100%}
+.cc-ico{font-size:1.65rem;margin-bottom:.9rem;display:block;transition:transform .3s}
+.cc:hover .cc-ico{transform:scale(1.1) rotate(-4deg)}
+.cc h3{
+  font-family:'Cormorant Garamond',serif;font-size:1.12rem;font-weight:600;
+  color:var(--text-hi);margin-bottom:.5rem;
+}
+.cc p{font-size:.875rem;color:var(--text);line-height:1.65}
+
+/* =====================================================
+   TIMELINE
+   ===================================================== */
+.tl{position:relative;padding-left:2.4rem}
+.tl::before{
+  content:'';position:absolute;left:0;top:10px;bottom:0;width:1px;
+  background:linear-gradient(to bottom,var(--gold),var(--border) 82%,transparent);
+}
+.tl-item{position:relative;padding-bottom:3.8rem}
+.tl-item:last-child{padding-bottom:0}
+
+.tl-dot{
+  position:absolute;left:-2.4rem;top:10px;
+  width:9px;height:9px;background:var(--gold);border-radius:50%;
+  box-shadow:0 0 0 3px var(--gold-dim),0 0 14px var(--gold-glow);
+}
+
+.tl-period{
+  font-family:'IBM Plex Mono',monospace;font-size:.65rem;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:.4rem;
+}
+.tl-co{
+  font-family:'Cormorant Garamond',serif;font-size:1.85rem;font-weight:700;
+  color:var(--text-hi);line-height:1;margin-bottom:.25rem;
+}
+.tl-role{
+  font-family:'Outfit',sans-serif;font-size:.87rem;font-style:italic;
+  color:var(--text);margin-bottom:1.3rem;
+}
+
+ul.pts{list-style:none;display:flex;flex-direction:column;gap:.5rem}
+ul.pts li{
+  font-size:.94rem;color:var(--text);
+  padding-left:1.4rem;position:relative;line-height:1.65;
+}
+ul.pts li::before{
+  content:'';position:absolute;left:0;top:.68em;
+  width:6px;height:1px;background:var(--gold);opacity:.55;
+}
+
+/* Client sub-block */
+.cl-blk{
+  margin-top:1.5rem;padding:1.3rem 1.5rem;
+  border-left:2px solid var(--border-hi);
+  background:var(--gold-dim);border-radius:0 4px 4px 0;
+}
+.cl-lbl{
+  font-family:'IBM Plex Mono',monospace;font-size:.62rem;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--gold);
+  margin-bottom:.7rem;display:flex;align-items:center;gap:.5rem;
+}
+.cl-lbl::before{content:'↳'}
+
+.tl-tags{margin-top:1.3rem;display:flex;flex-wrap:wrap;gap:.4rem}
+.ttag{
+  font-family:'IBM Plex Mono',monospace;font-size:.59rem;
+  letter-spacing:.06em;text-transform:uppercase;
+  padding:.25rem .65rem;border:1px solid var(--border-md);
+  color:var(--text-lo);background:var(--tag-bg);border-radius:2px;
+  transition:border-color .2s,color .2s;
+}
+.ttag:hover{border-color:var(--gold);color:var(--gold)}
+.ttag.hi{border-color:var(--border-hi);color:var(--gold);background:var(--gold-dim)}
+
+/* =====================================================
+   SKILLS
+   ===================================================== */
+.sk-grid{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:3rem 5rem;
+}
+.sk-label{
+  font-family:'IBM Plex Mono',monospace;font-size:.63rem;
+  letter-spacing:.18em;text-transform:uppercase;color:var(--gold);
+  padding-bottom:.65rem;border-bottom:1px solid var(--border-md);margin-bottom:.9rem;
+}
+.chips{display:flex;flex-wrap:wrap;gap:.4rem}
+.chip{
+  font-family:'Outfit',sans-serif;font-size:.76rem;font-weight:400;
+  padding:.3rem .75rem;border:1px solid var(--border);
+  color:var(--text);background:var(--tag-bg);border-radius:100px;
+  transition:border-color .2s,color .2s,background .2s,transform .15s;
+}
+.chip:hover{border-color:var(--gold);color:var(--gold);background:var(--gold-dim);transform:translateY(-1px)}
+.chip.s{border-color:var(--border-hi);color:var(--gold);background:var(--gold-dim);font-weight:500}
+
+/* =====================================================
+   EDUCATION
+   ===================================================== */
+.edu-row{display:grid;grid-template-columns:repeat(3,1fr);gap:1.4rem}
+.edu-card{
+  background:var(--surface);border:1px solid var(--border);
+  padding:2rem 1.7rem;border-radius:6px;position:relative;overflow:hidden;
+  transition:border-color .3s,transform .3s,box-shadow .3s,background .4s;
+}
+.edu-card:hover{border-color:var(--border-hi);transform:translateY(-4px);box-shadow:var(--shadow-sm)}
+.edu-glow{
+  position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(to right,transparent,var(--gold),transparent);
+  opacity:0;transition:opacity .3s;
+}
+.edu-card:hover .edu-glow{opacity:1}
+.edu-yr{
+  font-family:'IBM Plex Mono',monospace;font-size:.6rem;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:.9rem;
+}
+.edu-deg{
+  font-family:'Cormorant Garamond',serif;font-size:1.08rem;font-weight:600;
+  color:var(--text-hi);line-height:1.3;margin-bottom:.45rem;
+}
+.edu-sch{
+  font-family:'Outfit',sans-serif;font-size:.8rem;
+  font-weight:300;font-style:italic;color:var(--text-lo);
+}
+
+.affil{
+  margin-top:2.2rem;display:flex;align-items:center;gap:1.2rem;
+  padding:1.3rem 1.8rem;background:var(--gold-dim);
+  border:1px solid var(--border-hi);border-radius:4px;
+}
+.affil-lbl{
+  font-family:'IBM Plex Mono',monospace;font-size:.58rem;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--gold);white-space:nowrap;
+}
+.affil-dot{width:4px;height:4px;background:var(--gold);border-radius:50%;opacity:.45;flex-shrink:0}
+.affil-val{font-size:.85rem;font-style:italic;color:var(--text)}
+
+/* =====================================================
+   CONTACT
+   ===================================================== */
+#contact{border-top:1px solid var(--border);text-align:center}
+.ct-inner{max-width:620px;margin:0 auto}
+.ct-sub{
+  font-family:'Cormorant Garamond',serif;font-size:1.08rem;
+  font-weight:300;font-style:italic;color:var(--text);margin-bottom:2.8rem;
+}
+.ct-cards{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:1px;background:var(--border);
+  border:1px solid var(--border);border-radius:5px;overflow:hidden;
+  margin-bottom:2.5rem;
+}
+.ct-card{
+  background:var(--surface);padding:1.7rem 1.1rem;
+  text-decoration:none;display:flex;flex-direction:column;
+  align-items:center;gap:.28rem;transition:background .2s;
+}
+.ct-card:hover{background:var(--gold-dim)}
+.ct-l{
+  font-family:'IBM Plex Mono',monospace;font-size:.56rem;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--text-lo);
+}
+.ct-v{
+  font-family:'Outfit',sans-serif;font-size:.8rem;font-weight:500;
+  color:var(--gold);transition:color .2s;
+}
+.ct-card:hover .ct-v{color:var(--gold-lt)}
+.loc-badge{
+  display:inline-flex;align-items:center;gap:.45rem;
+  padding:.45rem 1.1rem;border:1px solid var(--border-md);
+  border-radius:100px;color:var(--text-lo);font-size:.8rem;
+}
+.loc-badge b{color:var(--gold);font-weight:500}
+
+/* =====================================================
+   FOOTER
+   ===================================================== */
+footer{
+  border-top:1px solid var(--border);padding:1.5rem 10vw;
+  display:flex;justify-content:space-between;align-items:center;
+  background:var(--bg);transition:background .4s;
+}
+.ft{
+  font-family:'IBM Plex Mono',monospace;font-size:.58rem;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--text-lo);
+}
+
+/* =====================================================
+   ANIMATIONS
+   ===================================================== */
+@keyframes up{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fi{from{opacity:0}to{opacity:1}}
+
+.rev{opacity:0;transform:translateY(26px);transition:opacity .62s ease,transform .62s ease}
+.rev.in{opacity:1;transform:translateY(0)}
+.d1{transition-delay:.08s}.d2{transition-delay:.16s}.d3{transition-delay:.24s}
+.d4{transition-delay:.32s}.d5{transition-delay:.40s}.d6{transition-delay:.48s}
+
+/* =====================================================
+   RESPONSIVE
+   ===================================================== */
+@media(max-width:1100px){
+  #hero{grid-template-columns:1fr}
+  .hero-l{padding:5rem 6vw 180px}
+  .hero-r{position:absolute;bottom:80px;right:6vw;opacity:.08}
+  .photo-wrap{width:200px;height:250px}
+  .stats-strip{grid-template-columns:repeat(2,1fr)}
+  .cg{grid-template-columns:1fr 1fr}
+  .edu-row{grid-template-columns:1fr 1fr}
+  .sk-grid{grid-template-columns:1fr}
+}
+@media(max-width:768px){
+  nav{padding:.9rem 4vw}
+  .nav-links{display:none}
+  .sec{padding:5rem 6vw}
+  .cg{grid-template-columns:1fr}
+  .edu-row{grid-template-columns:1fr}
+  .ct-cards{grid-template-columns:1fr}
+  .hero-r{display:none}
+  footer{flex-direction:column;gap:.5rem;text-align:center}
+  .affil{flex-direction:column;text-align:center}
+}
+</style>
+</head>
+<body>
+
+<!-- Cursor -->
+<div id="c-dot"></div>
+<div id="c-ring"></div>
+
+<!-- ======= NAV ======= -->
+<nav>
+  <div class="nav-logo">Shihaaz <em>Buhary</em></div>
+  <ul class="nav-links">
+    <li><a href="#competencies">Expertise</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#education">Education</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <div class="t-wrap" onclick="toggleTheme()">
+    <span class="t-lbl" id="tlbl">Dark</span>
+    <div class="t-track"><div class="t-thumb"></div></div>
+  </div>
+</nav>
+
+<!-- ======= HERO ======= -->
+<section id="hero">
+
+  <div class="hero-l">
+    <div class="h-eyebrow">
+      <div class="h-eline"></div>
+      <span class="h-etext">Senior Software Engineer · Architect · Riyadh, KSA</span>
+    </div>
+
+    <h1 class="h-name">
+      Shihaaz<br>
+      <span class="gold-line">Buhary</span>
+    </h1>
+
+    <div class="h-badges">
+      <span class="hbadge">Java · Spring Boot</span>
+      <span class="hbadge">AWS Certified</span>
+      <span class="hbadge">Microservices</span>
+      <span class="hbadge">DevSecOps</span>
+      <span class="hbadge">Applied AI</span>
+      <span class="hbadge">Technical Lead</span>
+    </div>
+
+    <p class="h-summary">
+      Over a decade architecting secure, cloud-native enterprise platforms across cybersecurity, telecom, logistics, and government.
+      Currently the Founder and Principal Architect of SkillX, an AI-powered mobile learning platform built from the ground up.
+    </p>
+
+    <div class="h-certs">
+      <span class="hcert">AWS Solutions Architect — Professional</span>
+      <span class="hcert">AWS Solutions Architect — Associate</span>
+    </div>
+
+    <div class="h-btns">
+      <a href="#experience" class="btn-a">View Experience</a>
+      <a href="#contact" class="btn-b">Get in Touch</a>
+    </div>
+  </div>
+
+  <div class="hero-r">
+    <div class="photo-wrap">
+      <div class="corner c-tl"></div>
+      <div class="corner c-tr"></div>
+      <div class="corner c-bl"></div>
+      <div class="corner c-br"></div>
+      <img
+        class="photo-img"
+        src="https://media.licdn.com/dms/image/v2/D4D03AQEb2RLR_tMdbQ/profile-displayphoto-scale_200_200/B4DZ3J_eqvG8Ac-/0/1777210355914?e=2147483647&v=beta&t=4F5lza1MFCg3nLm0B-j8STm14t7oL0D0kQraXDtckmw"
+        alt="Shihaaz Buhary"
+        loading="eager"
+      >
+    </div>
+  </div>
+
+  <div class="stats-strip">
+    <div class="sc"><span class="sn" data-target="15" data-s="+">0</span><span class="sl">Years in Software</span></div>
+    <div class="sc"><span class="sn" data-target="15" data-s="+">0</span><span class="sl">Enterprise Integrations</span></div>
+    <div class="sc"><span class="sn" data-target="14" data-s="">0</span><span class="sl">Engineers Led</span></div>
+    <div class="sc"><span class="sn" data-target="200" data-s="+">0</span><span class="sl">Enterprise Clients</span></div>
+  </div>
+
+</section>
+
+<!-- ======= COMPETENCIES ======= -->
+<section class="sec sec-alt" id="competencies">
+  <div class="ey rev"><div class="ey-line"></div><span class="ey-text">Expertise</span></div>
+  <h2 class="sh rev">Core Competencies</h2>
+  <div class="cg rev">
+    <div class="cc">
+      <div class="cc-bar"></div>
+      <span class="cc-ico">⬡</span>
+      <h3>Systems Architecture</h3>
+      <p>Modernizing monoliths to microservices, API-first design, and integration strategies for enterprise-grade platforms built to last.</p>
+    </div>
+    <div class="cc">
+      <div class="cc-bar"></div>
+      <span class="cc-ico">◈</span>
+      <h3>DevSecOps and Secure SDLC</h3>
+      <p>SAST/DAST governance, secrets management with HashiCorp Vault, and embedding security into every stage of the CI/CD pipeline.</p>
+    </div>
+    <div class="cc">
+      <div class="cc-bar"></div>
+      <span class="cc-ico">✦</span>
+      <h3>Applied AI and ML</h3>
+      <p>Conversational AI prototypes, RAG pipelines with Amazon Bedrock Knowledge Bases, and AI-led product strategy in enterprise contexts.</p>
+    </div>
+    <div class="cc">
+      <div class="cc-bar"></div>
+      <span class="cc-ico">◉</span>
+      <h3>Cloud-Native Engineering</h3>
+      <p>Containerization, Kubernetes orchestration, AWS infrastructure design, and performance optimization at enterprise scale.</p>
+    </div>
+    <div class="cc">
+      <div class="cc-bar"></div>
+      <span class="cc-ico">⬢</span>
+      <h3>Enterprise Integrations</h3>
+      <p>IDE, CI/CD, ticketing, and CRM/ERP integrations — 15+ delivered and adopted by 200+ global enterprise security customers.</p>
+    </div>
+    <div class="cc">
+      <div class="cc-bar"></div>
+      <span class="cc-ico">⬖</span>
+      <h3>Engineering Leadership</h3>
+      <p>Led cross-continent squads of up to 14 across the US, Sri Lanka, and Europe. Roadmaps, mentoring, and stakeholder alignment.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ======= EXPERIENCE ======= -->
+<section class="sec" id="experience">
+  <div class="ey rev"><div class="ey-line"></div><span class="ey-text">Career</span></div>
+  <h2 class="sh rev">Professional Experience</h2>
+
+  <div class="tl">
+
+    <div class="tl-item rev">
+      <div class="tl-dot"></div>
+      <div class="tl-period">Jul 2025 — Present</div>
+      <div class="tl-co">SkillX</div>
+      <div class="tl-role">Founder and Principal Architect · Early-stage EdTech Startup</div>
+      <ul class="pts">
+        <li>Incubated a mobile-first learning platform end-to-end, owning product vision and complete technical architecture.</li>
+        <li>Designed scalable, API-first systems spanning React Native mobile clients and Spring Boot microservices.</li>
+        <li>Shaped AI-assisted learning and content recommendation concepts to guide the platform strategy.</li>
+        <li>Evaluated cloud infrastructure economics and scalability trade-offs to inform launch and growth decisions.</li>
+      </ul>
+      <div class="tl-tags">
+        <span class="ttag hi">React Native</span><span class="ttag hi">Spring Boot</span>
+        <span class="ttag hi">AWS</span><span class="ttag">TypeScript</span>
+        <span class="ttag">PostgreSQL</span><span class="ttag">Redis</span>
+        <span class="ttag">Docker</span><span class="ttag">Applied AI</span><span class="ttag">JWT / OAuth2</span>
+      </div>
+    </div>
+
+    <div class="tl-item rev">
+      <div class="tl-dot"></div>
+      <div class="tl-period">Oct 2022 — Jun 2025</div>
+      <div class="tl-co">Avenga</div>
+      <div class="tl-role">Senior Software Engineer / Technical Lead · Sri Lanka and Bulgaria</div>
+      <ul class="pts">
+        <li>Modernized the Person2 platform with a React and TypeScript UI embedded in CUBA; cut navigation latency by 45%.</li>
+        <li>Refactored SQL queries and service logic; improved p95 response times by 30% and eliminated code duplication.</li>
+        <li>Implemented AOP/AspectJ runtime security, expanding authorization and auditing beyond out-of-the-box platform capabilities.</li>
+        <li>Migrated database versions and integrated external views on MS SQL Server for unified analytics access.</li>
+        <li>Mentored engineers and standardized code review and testing practices with JUnit and Mockito.</li>
+      </ul>
+      <div class="tl-tags">
+        <span class="ttag hi">Java</span><span class="ttag hi">Spring</span>
+        <span class="ttag hi">React</span><span class="ttag hi">TypeScript</span>
+        <span class="ttag">CUBA Platform</span><span class="ttag">MS SQL Server</span>
+        <span class="ttag">Docker</span><span class="ttag">Kubernetes</span>
+        <span class="ttag">OpenShift</span><span class="ttag">AOP / AspectJ</span>
+      </div>
+    </div>
+
+    <div class="tl-item rev">
+      <div class="tl-dot"></div>
+      <div class="tl-period">May 2017 — Jul 2024</div>
+      <div class="tl-co">Virtusa</div>
+      <div class="tl-role">Senior Lead Software Engineer / Lead Consultant · Sri Lanka and USA</div>
+      <ul class="pts">
+        <li>Directed modernization, secure integrations, and R&amp;D/presales delivery for global enterprise clients.</li>
+        <li>Interviewed 100+ candidates, mentored cross-account engineers, and delivered org-wide technical training programs.</li>
+        <li>Awarded the Virtusa Rockstar award in 2021 for exceptional innovation in enterprise delivery.</li>
+      </ul>
+
+      <div class="cl-blk">
+        <div class="cl-lbl">Verint — Architect / Senior Technical Lead · Apr 2024 – Jul 2024</div>
+        <ul class="pts">
+          <li>Built Salesforce and MS Dynamics microservices via Kafka, enabling real-time forecasting and scheduling pipelines.</li>
+          <li>Integrated HashiCorp Vault with Harness CI/CD pipelines; eliminated 90% of secret management issues.</li>
+          <li>Prototyped conversational analytics with Amazon Bedrock RAG; meaningfully improved trial response relevance.</li>
+          <li>Introduced Datadog monitoring; cut incident resolution time by 40% and raised SLA compliance across the board.</li>
+        </ul>
+      </div>
+
+      <div class="cl-blk">
+        <div class="cl-lbl">Veracode, Burlington MA — Architect / Technical Lead / SSE · Jun 2017 – Mar 2024</div>
+        <ul class="pts">
+          <li>Delivered 15+ enterprise-grade integrations connecting Veracode with IDEs, CI/CD pipelines, and ticketing systems for 200+ enterprise clients.</li>
+          <li>Migrated the Veracode platform from legacy JBoss to Spring Boot; halved deployment times and improved overall scalability.</li>
+          <li>Led a 14-member scrum team, boosting release velocity by 35% through stronger testing and observability practices.</li>
+          <li>Cut enterprise client onboarding from weeks to days through an API-first strategy and evolved integration roadmap.</li>
+          <li>Championed DevSecOps culture: embedded SAST/DAST automation into all CI/CD pipelines across the engineering organization.</li>
+          <li>Coordinated cross-continent delivery across the US, Sri Lanka, and Europe with consistent output and cultural alignment.</li>
+        </ul>
+      </div>
+
+      <div class="tl-tags">
+        <span class="ttag hi">Java</span><span class="ttag hi">Spring Boot</span>
+        <span class="ttag hi">Kafka</span><span class="ttag hi">AWS</span>
+        <span class="ttag hi">Amazon Bedrock</span><span class="ttag">Kubernetes</span>
+        <span class="ttag">HashiCorp Vault</span><span class="ttag">Harness</span>
+        <span class="ttag">Datadog</span><span class="ttag">DevSecOps</span>
+        <span class="ttag">PostgreSQL</span><span class="ttag">Docker</span>
+      </div>
+    </div>
+
+    <div class="tl-item rev">
+      <div class="tl-dot"></div>
+      <div class="tl-period">Jul 2010 — Apr 2017</div>
+      <div class="tl-co">Informatics International</div>
+      <div class="tl-role">Senior Software Engineer / Software Developer · Sri Lanka</div>
+      <ul class="pts">
+        <li>Built mediation and billing systems, BPMN 2.0 workflow platforms, and self-care portals; modernized UIs to replace legacy Oracle Forms.</li>
+        <li>Integrated cold storage management with SAP via Rosettanet XML for GlaxoSmithKline; cut manual data errors by 60%.</li>
+        <li>Developed operational dashboards for the Dept. of Registration of Persons, enabling real-time decisions for DRP officers.</li>
+        <li>Built a conference registration portal with payment gateway and admin tooling; reduced participant onboarding time by 50%.</li>
+      </ul>
+      <div class="tl-tags">
+        <span class="ttag hi">Java</span><span class="ttag hi">Spring</span>
+        <span class="ttag">Hibernate</span><span class="ttag">JBPM</span>
+        <span class="ttag">PrimeFaces</span><span class="ttag">Oracle</span>
+        <span class="ttag">SAP Integration</span><span class="ttag">Tomcat</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ======= SKILLS ======= -->
+<section class="sec sec-alt" id="skills">
+  <div class="ey rev"><div class="ey-line"></div><span class="ey-text">Technical Stack</span></div>
+  <h2 class="sh rev">Skills and Technologies</h2>
+  <div class="sk-grid rev">
+    <div>
+      <div class="sk-label">Languages and Frameworks</div>
+      <div class="chips">
+        <span class="chip s">Java</span><span class="chip s">Spring Boot</span>
+        <span class="chip">Spring Framework</span><span class="chip">Hibernate / JPA</span>
+        <span class="chip s">React</span><span class="chip s">React Native</span>
+        <span class="chip">TypeScript</span><span class="chip">Python</span>
+        <span class="chip">JavaScript</span><span class="chip">REST APIs</span>
+        <span class="chip">Microservices</span><span class="chip">CUBA Platform</span>
+      </div>
+    </div>
+    <div>
+      <div class="sk-label">Cloud and DevOps</div>
+      <div class="chips">
+        <span class="chip s">AWS</span><span class="chip s">Amazon Bedrock</span>
+        <span class="chip s">Docker</span><span class="chip s">Kubernetes</span>
+        <span class="chip">OpenShift</span><span class="chip">Harness CI/CD</span>
+        <span class="chip">Jenkins</span><span class="chip">GitLab CI</span>
+        <span class="chip">Kafka</span><span class="chip">HashiCorp Vault</span>
+        <span class="chip">Infrastructure as Code</span>
+      </div>
+    </div>
+    <div>
+      <div class="sk-label">Databases</div>
+      <div class="chips">
+        <span class="chip">PostgreSQL</span><span class="chip">MySQL</span>
+        <span class="chip">MS SQL Server</span><span class="chip">Oracle</span>
+        <span class="chip">Redis</span><span class="chip">MongoDB</span>
+      </div>
+    </div>
+    <div>
+      <div class="sk-label">Observability, Security and Testing</div>
+      <div class="chips">
+        <span class="chip s">DevSecOps</span><span class="chip s">SAST / DAST</span>
+        <span class="chip">AOP / AspectJ</span><span class="chip">Datadog</span>
+        <span class="chip">New Relic</span><span class="chip">Sumo Logic</span>
+        <span class="chip">JUnit</span><span class="chip">Mockito</span>
+        <span class="chip">Selenium</span><span class="chip">Jira / Confluence</span>
+        <span class="chip">Maven / Gradle</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======= EDUCATION ======= -->
+<section class="sec" id="education">
+  <div class="ey rev"><div class="ey-line"></div><span class="ey-text">Academic</span></div>
+  <h2 class="sh rev">Education</h2>
+  <div class="edu-row rev">
+    <div class="edu-card">
+      <div class="edu-glow"></div>
+      <div class="edu-yr">Expected 2027</div>
+      <div class="edu-deg">MSc in Artificial Intelligence</div>
+      <div class="edu-sch">University of Moratuwa, Sri Lanka</div>
+    </div>
+    <div class="edu-card">
+      <div class="edu-glow"></div>
+      <div class="edu-yr">2025</div>
+      <div class="edu-deg">Postgraduate Diploma in Computer Science</div>
+      <div class="edu-sch">University of Colombo, Sri Lanka</div>
+    </div>
+    <div class="edu-card">
+      <div class="edu-glow"></div>
+      <div class="edu-yr">2015</div>
+      <div class="edu-deg">BEng (Hons) Software Engineering<br><small style="font-size:.82em;font-weight:300;font-family:'Outfit',sans-serif">Upper Second Class Honours</small></div>
+      <div class="edu-sch">University of Westminster, UK</div>
+    </div>
+  </div>
+  <div class="affil rev">
+    <span class="affil-lbl">Affiliation</span>
+    <div class="affil-dot"></div>
+    <span class="affil-val">Member, Industrial Consultative Committee — Dept. of ICT, Faculty of Technology, South Eastern University of Sri Lanka · Jan 2025 – Present</span>
+  </div>
+</section>
+
+<!-- ======= CONTACT ======= -->
+<section class="sec" id="contact">
+  <div class="ct-inner">
+    <div class="ey rev" style="justify-content:center">
+      <div class="ey-line"></div>
+      <span class="ey-text">Get in Touch</span>
+      <div class="ey-line"></div>
+    </div>
+    <h2 class="sh rev" style="margin-bottom:1rem">Open to Opportunities</h2>
+    <p class="ct-sub rev">Currently based in Riyadh, Saudi Arabia. Open to senior engineering and architecture roles in KSA and UAE.</p>
+    <div class="ct-cards rev">
+      <a href="mailto:shihaazbz@gmail.com" class="ct-card">
+        <span class="ct-l">Email</span>
+        <span class="ct-v">shihaazbz@gmail.com</span>
+      </a>
+      <a href="tel:+966551642636" class="ct-card">
+        <span class="ct-l">Phone · KSA</span>
+        <span class="ct-v">+966 55 164 2636</span>
+      </a>
+      <a href="https://linkedin.com/in/shihaazbz" target="_blank" rel="noopener" class="ct-card">
+        <span class="ct-l">LinkedIn</span>
+        <span class="ct-v">linkedin.com/in/shihaazbz</span>
+      </a>
+    </div>
+    <div class="loc-badge rev">
+      <span>📍</span>
+      <b>Riyadh, Saudi Arabia</b>
+      <span style="color:var(--text-lo);margin:0 .3rem">·</span>
+      <span>Open to relocation: KSA / UAE</span>
+    </div>
+  </div>
+</section>
+
+<!-- ======= FOOTER ======= -->
+<footer>
+  <span class="ft">Shihaaz Buhary · Senior Software Engineer and Architect</span>
+  <span class="ft">2025</span>
+</footer>
+
+<!-- ======= SCRIPTS ======= -->
+<script>
+/* Custom cursor */
+const dot = document.getElementById('c-dot');
+const ring = document.getElementById('c-ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{
+  mx=e.clientX; my=e.clientY;
+  dot.style.cssText=`left:${mx}px;top:${my}px`;
+});
+(function loop(){
+  rx+=(mx-rx)*.13; ry+=(my-ry)*.13;
+  ring.style.cssText=`left:${rx}px;top:${ry}px`;
+  requestAnimationFrame(loop);
+})();
+
+/* Theme */
+function toggleTheme(){
+  const html=document.documentElement;
+  const dark=html.getAttribute('data-theme')==='dark';
+  html.setAttribute('data-theme',dark?'light':'dark');
+  document.getElementById('tlbl').textContent=dark?'Light':'Dark';
+}
+
+/* Counter */
+function counter(el){
+  const t=+el.dataset.target, s=el.dataset.s||'+', dur=1300, t0=performance.now();
+  (function step(now){
+    const p=Math.min((now-t0)/dur,1);
+    const e=1-Math.pow(1-p,3);
+    el.textContent=Math.round(e*t)+(p===1?s:'');
+    if(p<1)requestAnimationFrame(step);
+  })(performance.now());
+}
+
+/* Intersection observer */
+const done=new Set();
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(en=>{
+    if(!en.isIntersecting)return;
+    en.target.classList.add('in');
+    en.target.querySelectorAll('[data-target]').forEach(el=>{
+      if(!done.has(el)){done.add(el);counter(el)}
+    });
+  });
+},{threshold:.12,rootMargin:'0px 0px -40px 0px'});
+
+document.querySelectorAll('.rev').forEach(el=>obs.observe(el));
+
+// Observe stats strip (not .rev)
+const strip=document.querySelector('.stats-strip');
+if(strip){
+  new IntersectionObserver(en=>{
+    en.forEach(e=>{
+      if(e.isIntersecting) e.target.querySelectorAll('[data-target]').forEach(el=>{
+        if(!done.has(el)){done.add(el);counter(el)}
+      });
+    });
+  },{threshold:.3}).observe(strip);
+}
+
+/* Stagger card delays */
+['.cg','.edu-row'].forEach(sel=>{
+  const g=document.querySelector(sel);
+  if(g)Array.from(g.children).forEach((c,i)=>c.style.transitionDelay=(i*.09)+'s');
+});
+</script>
+</body>
+</html>
