@@ -68,13 +68,32 @@
    BASE
    ===================================================== */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth;font-size:17px}
+html{font-size:17px;height:100%}
 body{
   background:var(--bg);color:var(--text);
   font-family:'Outfit',sans-serif;font-weight:400;line-height:1.75;
-  overflow-x:hidden;
+  /* overflow:clip stops horizontal bleed WITHOUT creating a scroll container */
+  overflow:clip;
+  height:100%;
   transition:background .4s,color .4s;
   cursor:none;
+}
+a{cursor:none;text-decoration:none;color:inherit}
+button{cursor:none}
+img{display:block}
+
+/* =====================================================
+   SCROLL CONTAINER — the single source of scroll truth
+   All snap magic lives here, not on html/body
+   ===================================================== */
+#scroll-wrap{
+  height:100vh;
+  overflow-y:scroll;
+  overflow-x:hidden;
+  scroll-snap-type:y mandatory;
+  scroll-behavior:smooth;
+  /* allow fixed children (nav, cursor, dots) to layer on top */
+  position:relative;
 }
 a{cursor:none;text-decoration:none;color:inherit}
 button{cursor:none}
@@ -87,16 +106,19 @@ body::after{
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.80' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='.03'/%3E%3C/svg%3E");
 }
 
-/* Custom cursor */
-#c-dot,#c-ring{position:fixed;pointer-events:none;z-index:9999;top:0;left:0;will-change:transform}
+/* Custom cursor — hidden until mouse enters viewport */
+#c-dot,#c-ring{
+  position:fixed;pointer-events:none;z-index:9999;top:0;left:0;
+  will-change:transform;
+  opacity:0;transition:opacity .3s;
+}
 #c-dot{
   width:8px;height:8px;background:var(--gold);border-radius:50%;
-  transform:translate(-50%,-50%);transition:width .15s,height .15s,background .3s;
+  transform:translate(-50%,-50%);
 }
 #c-ring{
   width:40px;height:40px;border:1.5px solid var(--gold);border-radius:50%;
-  transform:translate(-50%,-50%);opacity:.38;
-  transition:width .28s,height .28s,opacity .28s;
+  transform:translate(-50%,-50%);
 }
 
 /* =====================================================
@@ -141,10 +163,83 @@ nav{
 [data-theme="light"] .t-thumb{transform:translateX(21px)}
 
 /* =====================================================
+   SCROLL SNAP SECTIONS
+   ===================================================== */
+.snap-page{
+  scroll-snap-align:start;
+  /* snap-stop:always ensures slow scrolling still hits every page */
+  scroll-snap-stop:always;
+  height:100vh;
+  display:flex;flex-direction:column;justify-content:center;
+  position:relative;
+}
+/* Experience: snaps at top, scrolls through naturally */
+#experience{
+  scroll-snap-align:start;
+  scroll-snap-stop:always;
+  height:auto;min-height:100vh;
+}
+/* Scroll hint at bottom of experience */
+.exp-hint{
+  display:flex;align-items:center;justify-content:center;gap:.65rem;
+  padding:2.5rem 0 3.5rem;
+  font-family:'IBM Plex Mono',monospace;font-size:.6rem;
+  letter-spacing:.18em;text-transform:uppercase;color:var(--text-lo);
+  animation:bob 2s ease-in-out infinite;
+}
+.exp-hint svg{
+  width:14px;height:14px;flex-shrink:0;
+  color:var(--gold);
+}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(6px)}}
+
+/* Back to top */
+#back-top{
+  position:fixed;bottom:2.2rem;right:5.5rem;z-index:600;
+  width:44px;height:44px;border-radius:50%;
+  background:var(--gold);color:#0B0E15;
+  border:none;font-size:1.1rem;
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;pointer-events:none;cursor:none;
+  transition:opacity .35s,transform .25s,background .2s;
+  box-shadow:0 4px 20px var(--gold-glow);
+}
+#back-top.visible{opacity:1;pointer-events:auto}
+#back-top:hover{background:var(--gold-lt);transform:translateY(-3px)}
+
+/* Side nav dots */
+#side-nav{
+  position:fixed;right:1.6rem;top:50%;transform:translateY(-50%);
+  z-index:400;display:flex;flex-direction:column;gap:.65rem;
+  opacity:0;transition:opacity .4s;
+}
+#side-nav.vis{opacity:1}
+.sdot{
+  width:7px;height:7px;border-radius:50%;
+  background:transparent;border:1.5px solid var(--text-lo);
+  transition:background .25s,border-color .25s,transform .25s;
+  display:block;position:relative;cursor:none;
+}
+.sdot.active{background:var(--gold);border-color:var(--gold);transform:scale(1.45)}
+.sdot:hover{border-color:var(--gold);transform:scale(1.25)}
+.sdot::after{
+  content:attr(data-label);
+  position:absolute;right:calc(100% + 10px);top:50%;transform:translateY(-50%);
+  font-family:'IBM Plex Mono',monospace;font-size:.55rem;
+  letter-spacing:.1em;text-transform:uppercase;white-space:nowrap;
+  background:var(--surface);color:var(--gold);
+  padding:.22rem .55rem;border:1px solid var(--border-md);border-radius:2px;
+  opacity:0;pointer-events:none;transition:opacity .2s;
+}
+.sdot:hover::after{opacity:1}
+
+/* =====================================================
    HERO
    ===================================================== */
 #hero{
-  min-height:100vh;padding-top:70px;
+  scroll-snap-align:start;
+  scroll-snap-stop:always;
+  min-height:100vh;height:100vh;padding-top:70px;
   display:grid;grid-template-columns:1fr 380px;
   position:relative;overflow:hidden;
 }
@@ -286,8 +381,14 @@ nav{
 /* =====================================================
    SHARED SECTION
    ===================================================== */
+/* Default sec (used by experience which is not height-constrained) */
 .sec{padding:7.5rem 9vw;position:relative;transition:background .4s}
 .sec-alt{background:var(--surface)}
+
+/* Snap-page override: tighter vertical padding so content fits in 100vh */
+.snap-page.sec{
+  padding:4.5rem 9vw 3.5rem;
+}
 
 .sec-ey{display:flex;align-items:center;gap:.75rem;margin-bottom:.75rem}
 .se-line{width:32px;height:1px;background:var(--gold);opacity:.55}
@@ -300,6 +401,8 @@ h2.sh{
   font-size:clamp(2rem,3.5vw,3.3rem);font-weight:700;
   color:var(--text-hi);line-height:1.1;margin-bottom:3.5rem;
 }
+/* Tighter heading margin inside snap pages */
+.snap-page h2.sh{margin-bottom:2rem}
 
 /* =====================================================
    COMPETENCIES
@@ -341,7 +444,7 @@ h2.sh{
 .tl-item:last-child{padding-bottom:0}
 
 .tl-dot{
-  position:absolute;left:-2.5rem;top:12px;
+  position:absolute;left:-2.25rem;top:12px;
   width:10px;height:10px;background:var(--gold);border-radius:50%;
   box-shadow:0 0 0 4px var(--gold-dim),0 0 16px var(--gold-glow);
 }
@@ -446,6 +549,78 @@ ul.pts li::before{
 .chip.s{border-color:var(--border-hi);color:var(--gold);background:var(--gold-dim);font-weight:500}
 
 /* =====================================================
+   OPEN SOURCE
+   ===================================================== */
+.os-card{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:4rem;align-items:start;
+}
+.os-plugin-header{
+  display:flex;align-items:center;gap:1.2rem;margin-bottom:1.5rem;
+}
+.os-jenkins-logo{
+  width:52px;height:52px;object-fit:contain;border-radius:8px;
+  background:var(--surface2);border:1px solid var(--border);padding:6px;flex-shrink:0;
+}
+.os-logo-fb{
+  width:52px;height:52px;border-radius:8px;
+  background:var(--surface2);border:1px solid var(--border);flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:700;color:var(--gold);
+}
+.os-plugin-name{
+  font-family:'Cormorant Garamond',serif;font-size:1.9rem;font-weight:700;
+  color:var(--text-hi);line-height:1;
+}
+.os-plugin-sub{
+  font-family:'IBM Plex Mono',monospace;font-size:.62rem;
+  letter-spacing:.1em;color:var(--gold);margin-top:.35rem;
+}
+.os-desc{
+  font-size:.97rem;color:var(--text);line-height:1.72;margin-bottom:1.6rem;
+}
+.os-links{
+  display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:1.3rem;
+}
+.os-link{
+  display:flex;align-items:center;gap:.5rem;
+  font-family:'IBM Plex Mono',monospace;font-size:.65rem;
+  letter-spacing:.1em;text-transform:uppercase;
+  color:var(--gold);padding:.4rem .9rem;
+  border:1px solid var(--border-hi);background:var(--gold-dim);border-radius:3px;
+  transition:background .2s,box-shadow .2s;
+}
+.os-link:hover{background:rgba(212,168,67,.18);box-shadow:0 4px 16px var(--gold-glow)}
+.os-link-ico{font-size:.75rem}
+
+/* Stats panel */
+.os-stat-grid{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:1px;background:var(--border);
+  border:1px solid var(--border);border-radius:6px;overflow:hidden;
+  margin-bottom:1.5rem;
+}
+.os-stat{
+  background:var(--surface);padding:1.6rem 1.4rem;
+  display:flex;flex-direction:column;gap:.35rem;
+  transition:background .4s;
+}
+.os-stat-val{
+  font-family:'Cormorant Garamond',serif;font-size:1.7rem;font-weight:700;
+  color:var(--gold);line-height:1;
+}
+.os-stat-lbl{
+  font-family:'IBM Plex Mono',monospace;font-size:.58rem;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--text-lo);line-height:1.4;
+}
+.os-maintainer-note{
+  padding:1rem 1.3rem;
+  border-left:2px solid var(--border-hi);
+  background:var(--gold-dim);border-radius:0 4px 4px 0;
+  font-size:.88rem;font-style:italic;color:var(--text);line-height:1.6;
+}
+
+/* =====================================================
    CERTIFICATIONS
    ===================================================== */
 .certs-row{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem}
@@ -461,7 +636,7 @@ ul.pts li::before{
   box-shadow:0 12px 36px var(--gold-glow);
 }
 .cert-badge-img{
-  width:60px;height:60px;object-fit:contain;flex-shrink:0;
+  width:100px;height:100px;object-fit:contain;flex-shrink:0;
 }
 .cert-badge-fb{
   width:60px;height:60px;border-radius:50%;flex-shrink:0;
@@ -502,7 +677,7 @@ ul.pts li::before{
 .edu-card:hover .edu-glow{opacity:1}
 .uni-logo-wrap{margin-bottom:1.2rem}
 .uni-logo{
-  height:44px;max-width:120px;object-fit:contain;border-radius:8px;
+  height:64px;max-width:180px;object-fit:contain;border-radius:8px;
   filter:grayscale(30%);opacity:.85;transition:opacity .2s,filter .2s;
 }
 [data-theme="light"] .uni-logo{filter:none;opacity:1}
@@ -540,7 +715,7 @@ ul.pts li::before{
 /* =====================================================
    CONTACT
    ===================================================== */
-#contact{border-top:1px solid var(--border);text-align:center}
+#contact{border-top:1px solid var(--border);text-align:center;position:relative}
 .ct-inner{max-width:640px;margin:0 auto}
 .ct-sub{
   font-family:'Cormorant Garamond',serif;font-size:1.1rem;
@@ -586,6 +761,33 @@ footer{
   letter-spacing:.12em;text-transform:uppercase;color:var(--text-lo);
 }
 
+/* ---- Company & university links ---- */
+.co-link{
+  /* inherits .tl-co styles (Cormorant Garamond, 1.9rem, bold) */
+  text-decoration:none;color:var(--text-hi);
+  border-bottom:2px solid transparent;
+  transition:color .2s,border-color .2s;
+  display:inline-block;
+}
+.co-link:hover{color:var(--gold);border-bottom-color:var(--gold)}
+
+.co-link-sm{
+  text-decoration:none;color:var(--gold);
+  border-bottom:1px solid transparent;
+  transition:border-color .2s;
+}
+.co-link-sm:hover{border-bottom-color:var(--gold)}
+
+.uni-link{
+  /* inherits .edu-sch styles */
+  text-decoration:none;color:var(--text-lo);
+  border-bottom:1px dotted transparent;
+  transition:color .2s,border-color .2s;
+  display:inline-block;margin-top:auto;
+  font-style:italic;font-size:.84rem;font-weight:300;
+}
+.uni-link:hover{color:var(--gold);border-bottom-color:var(--gold)}
+
 /* =====================================================
    ANIMATIONS
    ===================================================== */
@@ -607,12 +809,23 @@ footer{
   .certs-row{grid-template-columns:1fr}
   .edu-row{grid-template-columns:1fr 1fr}
   .sk-grid{grid-template-columns:1fr}
+  .os-card{grid-template-columns:1fr}
 }
 @media(max-width:768px){
   html{font-size:16px}
+  /* Disable snap on mobile: sections flow naturally */
+  #scroll-wrap{
+    scroll-snap-type:none;
+    height:auto;
+    overflow-y:auto;
+    overflow-x:hidden;
+  }
   nav{padding:.9rem 4vw}
   .nav-links{display:none}
   .sec{padding:5rem 5vw}
+  .snap-page{height:auto;scroll-snap-align:none;scroll-snap-stop:unset}
+  .snap-page.sec{padding:5rem 5vw}
+  #hero{height:auto;min-height:100svh}
   .cg{grid-template-columns:1fr}
   .edu-row{grid-template-columns:1fr}
   .ct-cards{grid-template-columns:1fr}
@@ -620,6 +833,8 @@ footer{
   footer{flex-direction:column;gap:.5rem;text-align:center}
   .affil{flex-direction:column;text-align:center}
   .certs-row{grid-template-columns:1fr}
+  #side-nav{display:none}
+  #back-top{right:1.5rem}
 }
 </style>
 </head>
@@ -628,6 +843,21 @@ footer{
 <!-- Cursor -->
 <div id="c-dot"></div>
 <div id="c-ring"></div>
+
+<!-- Back to top -->
+<button id="back-top" title="Back to top" onclick="scrollToTop()">↑</button>
+
+<!-- Side dot navigator -->
+<div id="side-nav" role="navigation" aria-label="Section navigation">
+  <a class="sdot" data-label="Home"           data-sec="hero"           href="#hero"></a>
+  <a class="sdot" data-label="Expertise"      data-sec="competencies"   href="#competencies"></a>
+  <a class="sdot" data-label="Experience"     data-sec="experience"     href="#experience"></a>
+  <a class="sdot" data-label="Skills"         data-sec="skills"         href="#skills"></a>
+  <a class="sdot" data-label="Open Source"    data-sec="opensource"     href="#opensource"></a>
+  <a class="sdot" data-label="Certifications" data-sec="certifications" href="#certifications"></a>
+  <a class="sdot" data-label="Education"      data-sec="education"      href="#education"></a>
+  <a class="sdot" data-label="Contact"        data-sec="contact"        href="#contact"></a>
+</div>
 
 <!-- ======================================================
      NAV
@@ -638,6 +868,7 @@ footer{
     <li><a href="#competencies">Expertise</a></li>
     <li><a href="#experience">Experience</a></li>
     <li><a href="#skills">Skills</a></li>
+    <li><a href="#opensource">Open Source</a></li>
     <li><a href="#certifications">Certifications</a></li>
     <li><a href="#education">Education</a></li>
     <li><a href="#contact">Contact</a></li>
@@ -647,6 +878,11 @@ footer{
     <div class="t-track"><div class="t-thumb"></div></div>
   </div>
 </nav>
+
+<!-- ======================================================
+     SCROLL CONTAINER — snap scroll lives here
+     ====================================================== -->
+<div id="scroll-wrap">
 
 <!-- ======================================================
      HERO
@@ -723,7 +959,7 @@ footer{
 <!-- ======================================================
      COMPETENCIES
      ====================================================== -->
-<section class="sec sec-alt" id="competencies">
+<section class="sec sec-alt snap-page" id="competencies">
   <div class="sec-ey rev"><div class="se-line"></div><span class="se-txt">Expertise</span></div>
   <h2 class="sh rev">Core Competencies</h2>
   <div class="cg rev">
@@ -812,7 +1048,7 @@ footer{
           alt="Avenga">
         <div class="tl-header-text">
           <div class="tl-period">Oct 2022 — Dec 2025</div>
-          <div class="tl-co">Avenga</div>
+          <a class="tl-co co-link" href="https://www.avenga.com/" target="_blank" rel="noopener">Avenga</a>
         </div>
       </div>
       <div class="tl-role">Senior Software Engineer / Technical Lead · Bulgaria</div>
@@ -842,7 +1078,7 @@ footer{
           alt="Virtusa">
         <div class="tl-header-text">
           <div class="tl-period">May 2017 — Jul 2024</div>
-          <div class="tl-co">Virtusa</div>
+          <a class="tl-co co-link" href="https://www.virtusa.com/" target="_blank" rel="noopener">Virtusa</a>
         </div>
       </div>
       <div class="tl-role">Senior Lead Software Engineer · USA</div>
@@ -858,7 +1094,7 @@ footer{
           <img class="cl-logo" src="images/company-logos/verint.png"
             onerror="this.outerHTML='<div class=\'cl-logo-fb\'>Verint</div>'"
             alt="Verint">
-          Verint — Architect / Senior Technical Lead
+          <a href="https://www.verint.com/" target="_blank" rel="noopener" class="co-link-sm">Verint</a> — Architect / Senior Technical Lead
         </div>
         <ul class="pts">
           <li>Built Salesforce and MS Dynamics microservices via Kafka, enabling real-time forecasting and scheduling pipelines.</li>
@@ -874,7 +1110,7 @@ footer{
           <img class="cl-logo" src="images/company-logos/veracode.png"
             onerror="this.outerHTML='<div class=\'cl-logo-fb\'>Veracode</div>'"
             alt="Veracode">
-          Veracode, Burlington MA — Architect / Technical Lead / SSE
+          <a href="https://www.veracode.com/" target="_blank" rel="noopener" class="co-link-sm">Veracode</a>, Burlington MA — Architect / Technical Lead / SSE
         </div>
         <ul class="pts">
           <li>Delivered 15+ enterprise-grade integrations connecting Veracode with IDEs, CI/CD pipelines, and ticketing tools for 200+ enterprise clients.</li>
@@ -906,7 +1142,7 @@ footer{
           alt="Informatics">
         <div class="tl-header-text">
           <div class="tl-period">Jul 2010 — Apr 2017</div>
-          <div class="tl-co">Informatics</div>
+          <a class="tl-co co-link" href="https://www.informaticsint.com/" target="_blank" rel="noopener">Informatics</a>
         </div>
       </div>
       <div class="tl-role">Senior Software Engineer · Sri Lanka</div>
@@ -926,12 +1162,21 @@ footer{
     </div>
 
   </div><!-- .tl -->
+
+  <!-- Scroll-continue nudge -->
+  <div class="exp-hint">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="color:var(--gold);flex-shrink:0">
+      <path d="M12 5v14M5 15l7 7 7-7"/>
+    </svg>
+    Continue scrolling for Skills
+  </div>
+
 </section>
 
 <!-- ======================================================
      SKILLS
      ====================================================== -->
-<section class="sec sec-alt" id="skills">
+<section class="sec sec-alt snap-page" id="skills">
   <div class="sec-ey rev"><div class="se-line"></div><span class="se-txt">Technical Stack</span></div>
   <h2 class="sh rev">Skills and Technologies</h2>
   <div class="sk-grid rev">
@@ -998,10 +1243,79 @@ footer{
   </div>
 </section>
 
+<section class="sec snap-page" id="opensource">
+  <div class="sec-ey rev"><div class="se-line"></div><span class="se-txt">Open Source</span></div>
+  <h2 class="sh rev">Open Source Contribution</h2>
+
+  <div class="os-card rev">
+    <!-- Left: plugin identity -->
+    <div class="os-left">
+      <div class="os-plugin-header">
+        <img class="os-jenkins-logo" src="images/company-logos/jenkins.png"
+          onerror="this.outerHTML='<div class=\'os-logo-fb\'>J</div>'"
+          alt="Jenkins">
+        <div>
+          <div class="os-plugin-name">Veracode Scan</div>
+          <div class="os-plugin-sub">Official Jenkins Plugin · jenkinsci/veracode-scan-plugin</div>
+        </div>
+      </div>
+
+      <p class="os-desc">
+        A post-build Jenkins plugin that automates application submission to Veracode for security scanning —
+        covering SAST, SCA, DAST, and IAST — directly within CI/CD pipelines. Used by enterprises globally
+        to embed security into every build.
+      </p>
+
+      <div class="os-links">
+        <a class="os-link" href="https://plugins.jenkins.io/veracode-scan/" target="_blank" rel="noopener">
+          <span class="os-link-ico">⬡</span> Jenkins Plugin Page
+        </a>
+        <a class="os-link" href="https://github.com/jenkinsci/veracode-scan-plugin" target="_blank" rel="noopener">
+          <span class="os-link-ico">◈</span> GitHub Repository
+        </a>
+      </div>
+
+      <div class="os-tags">
+        <span class="ttag hi">Java</span>
+        <span class="ttag hi">Jenkins</span>
+        <span class="ttag">Maven</span>
+        <span class="ttag">SAST / DAST / SCA</span>
+        <span class="ttag">DevSecOps</span>
+        <span class="ttag">MIT License</span>
+      </div>
+    </div>
+
+    <!-- Right: stats -->
+    <div class="os-right">
+      <div class="os-stat-grid">
+        <div class="os-stat">
+          <span class="os-stat-val">Maintainer</span>
+          <span class="os-stat-lbl">Role</span>
+        </div>
+        <div class="os-stat">
+          <span class="os-stat-val">0.58%</span>
+          <span class="os-stat-lbl">of all Jenkins<br>controllers globally</span>
+        </div>
+        <div class="os-stat">
+          <span class="os-stat-val">Official</span>
+          <span class="os-stat-lbl">Jenkins Marketplace<br>listing</span>
+        </div>
+        <div class="os-stat">
+          <span class="os-stat-val">MIT</span>
+          <span class="os-stat-lbl">Open Source<br>license</span>
+        </div>
+      </div>
+      <div class="os-maintainer-note">
+        Listed as a named Maintainer on the official Jenkins Plugin page alongside the core Veracode engineering team.
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ======================================================
      CERTIFICATIONS
      ====================================================== -->
-<section class="sec" id="certifications">
+<section class="sec snap-page" id="certifications">
   <div class="sec-ey rev"><div class="se-line"></div><span class="se-txt">Credentials</span></div>
   <h2 class="sh rev">Certifications</h2>
   <div class="certs-row rev">
@@ -1044,7 +1358,7 @@ footer{
 <!-- ======================================================
      EDUCATION
      ====================================================== -->
-<section class="sec sec-alt" id="education">
+<section class="sec sec-alt snap-page" id="education">
   <div class="sec-ey rev"><div class="se-line"></div><span class="se-txt">Academic</span></div>
   <h2 class="sh rev">Education</h2>
   <div class="edu-row rev">
@@ -1058,7 +1372,7 @@ footer{
       </div>
       <div class="edu-yr">Expected 2028</div>
       <div class="edu-deg">MSc in Artificial Intelligence</div>
-      <div class="edu-sch">University of Moratuwa, Sri Lanka</div>
+      <a class="edu-sch uni-link" href="https://uom.lk/" target="_blank" rel="noopener">University of Moratuwa, Sri Lanka</a>
     </div>
 
     <div class="edu-card">
@@ -1070,7 +1384,7 @@ footer{
       </div>
       <div class="edu-yr">2025</div>
       <div class="edu-deg">Postgraduate Diploma in Computer Science</div>
-      <div class="edu-sch">University of Colombo, Sri Lanka</div>
+      <a class="edu-sch uni-link" href="https://cmb.ac.lk/" target="_blank" rel="noopener">University of Colombo, Sri Lanka</a>
     </div>
 
     <div class="edu-card">
@@ -1084,7 +1398,7 @@ footer{
       <div class="edu-deg">BEng (Hons) Software Engineering<br>
         <small style="font-size:.83em;font-weight:300;font-family:'Outfit',sans-serif">Upper Second Class Honours</small>
       </div>
-      <div class="edu-sch">University of Westminster, UK</div>
+      <a class="edu-sch uni-link" href="https://www.westminster.ac.uk/" target="_blank" rel="noopener">University of Westminster, UK</a>
     </div>
 
   </div>
@@ -1099,7 +1413,7 @@ footer{
 <!-- ======================================================
      CONTACT
      ====================================================== -->
-<section class="sec" id="contact">
+<section class="sec snap-page" id="contact">
   <div class="ct-inner">
     <div class="sec-ey rev" style="justify-content:center">
       <div class="se-line"></div>
@@ -1131,27 +1445,42 @@ footer{
       <span>Transferable Iqama · Open to KSA / UAE / Qatar</span>
     </div>
   </div>
+
+  <!-- Footer pinned to bottom of contact snap page -->
+  <footer style="position:absolute;bottom:0;left:0;right:0;padding:1.2rem 9vw;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;background:transparent">
+    <span class="ft">Shihaaz Buhary · Senior Software Engineer and Architect</span>
+    <span class="ft">Riyadh · 2025</span>
+  </footer>
+
 </section>
 
-<!-- ======================================================
-     FOOTER
-     ====================================================== -->
-<footer>
-  <span class="ft">Shihaaz Buhary · Senior Software Engineer and Architect</span>
-  <span class="ft">Riyadh · 2025</span>
-</footer>
+</div><!-- #scroll-wrap -->
 
 <!-- ======================================================
      SCRIPTS
      ====================================================== -->
 <script>
+/* ---- Scroll container reference ---- */
+const wrap = document.getElementById('scroll-wrap');
+
 /* ---- Custom Cursor ---- */
 const dot = document.getElementById('c-dot');
 const ring = document.getElementById('c-ring');
-let mx=0,my=0,rx=0,ry=0;
+let mx=0,my=0,rx=0,ry=0,cursorReady=false;
 document.addEventListener('mousemove',e=>{
   mx=e.clientX; my=e.clientY;
   dot.style.left=mx+'px'; dot.style.top=my+'px';
+  if(!cursorReady){
+    cursorReady=true;
+    dot.style.opacity='1';
+    ring.style.opacity='.38';
+  }
+});
+document.addEventListener('mouseleave',()=>{
+  dot.style.opacity='0'; ring.style.opacity='0';
+});
+document.addEventListener('mouseenter',()=>{
+  if(cursorReady){ dot.style.opacity='1'; ring.style.opacity='.38'; }
 });
 (function loop(){
   rx+=(mx-rx)*.13; ry+=(my-ry)*.13;
@@ -1167,6 +1496,34 @@ function toggleTheme(){
   document.getElementById('tlbl').textContent=dark?'Light':'Dark';
 }
 
+/* ---- Back to top — scroll the WRAP, not document ---- */
+function scrollToTop(){
+  wrap.scrollTo({top:0,behavior:'smooth'});
+}
+const backTop=document.getElementById('back-top');
+
+/* ---- Smooth anchor navigation inside scroll-wrap ---- */
+document.querySelectorAll('a[href^="#"]').forEach(a=>{
+  a.addEventListener('click',e=>{
+    const id=a.getAttribute('href').slice(1);
+    const target=document.getElementById(id);
+    if(target && wrap.contains(target)){
+      e.preventDefault();
+      target.scrollIntoView({behavior:'smooth',block:'start'});
+    }
+  });
+});
+
+/* ---- Side nav dots ---- */
+const sideNav=document.getElementById('side-nav');
+const allDots=[...document.querySelectorAll('.sdot')];
+const sections=['hero','competencies','experience','skills','opensource','certifications','education','contact']
+  .map(id=>document.getElementById(id)).filter(Boolean);
+
+function setActiveDot(id){
+  allDots.forEach(d=>d.classList.toggle('active',d.dataset.sec===id));
+}
+
 /* ---- Counter Animation ---- */
 function animCount(el){
   const target=+el.dataset.target;
@@ -1180,20 +1537,42 @@ function animCount(el){
   })(performance.now());
 }
 
-/* ---- Intersection Observer ---- */
+/* ---- Intersection Observer — root is the scroll-wrap ---- */
 const done=new Set();
-const obs=new IntersectionObserver(entries=>{
+const ioOpts={ root:wrap, threshold:0.35 };
+
+/* Section active tracking */
+const secObs=new IntersectionObserver(entries=>{
   entries.forEach(en=>{
-    if(!en.isIntersecting)return;
+    if(!en.isIntersecting) return;
+    const id=en.target.id;
+    if(id){
+      setActiveDot(id);
+      if(id==='hero'){
+        backTop.classList.remove('visible');
+        sideNav.classList.remove('vis');
+      } else {
+        backTop.classList.add('visible');
+        sideNav.classList.add('vis');
+      }
+    }
+  });
+}, ioOpts);
+sections.forEach(s=>secObs.observe(s));
+
+/* Scroll-reveal + counters */
+const revObs=new IntersectionObserver(entries=>{
+  entries.forEach(en=>{
+    if(!en.isIntersecting) return;
     en.target.classList.add('in');
     en.target.querySelectorAll('[data-target]').forEach(el=>{
       if(!done.has(el)){done.add(el);animCount(el)}
     });
   });
-},{threshold:.11,rootMargin:'0px 0px -36px 0px'});
-document.querySelectorAll('.rev').forEach(el=>obs.observe(el));
+},{ root:wrap, threshold:0.12, rootMargin:'0px 0px -40px 0px' });
+document.querySelectorAll('.rev').forEach(el=>revObs.observe(el));
 
-/* Stats strip counters (not .rev) */
+/* Stats strip counters */
 const strip=document.querySelector('.stats-strip');
 if(strip){
   new IntersectionObserver(en=>{
@@ -1202,14 +1581,17 @@ if(strip){
         if(!done.has(el)){done.add(el);animCount(el)}
       });
     });
-  },{threshold:.3}).observe(strip);
+  },{ root:wrap, threshold:0.4 }).observe(strip);
 }
 
 /* ---- Stagger card children ---- */
-['.cg','.edu-row','.certs-row'].forEach(sel=>{
+['.cg','.edu-row','.certs-row','.os-stat-grid'].forEach(sel=>{
   const g=document.querySelector(sel);
   if(g)Array.from(g.children).forEach((c,i)=>c.style.transitionDelay=(i*.10)+'s');
 });
+
+/* ---- Set hero as initially active ---- */
+setActiveDot('hero');
 </script>
 </body>
 </html>
