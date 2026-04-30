@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Shihaaz Buhary — Senior Software Engineer and Architect</title>
+<title>Shihaaz Buhary · Senior Software Engineer and Architect</title>
 
 <!-- =====================================================
      Google Analytics 4
@@ -194,7 +194,10 @@ nav{
 #experience{
   scroll-snap-align:start;
   scroll-snap-stop:always;
-  height:auto;min-height:100vh;
+  height:100vh;
+  display:flex;flex-direction:column;justify-content:center;
+  padding:4.5rem 9vw 3.5rem;
+  position:relative;transition:background .4s;
 }
 /* Scroll hint at bottom of experience */
 .exp-hint{
@@ -504,7 +507,15 @@ h2.sh{
 }
 .tl-role{
   font-family:'Outfit',sans-serif;font-size:.9rem;font-style:italic;
-  color:var(--text);margin-bottom:1.3rem;margin-top:.3rem;
+  color:var(--text);margin-bottom:.9rem;margin-top:.3rem;
+}
+.tl-desc{
+  font-size:.95rem;color:var(--text);line-height:1.75;margin-bottom:1.2rem;
+}
+.tl-client-label{
+  font-family:'IBM Plex Mono',monospace;font-size:.62rem;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--gold);
+  margin-bottom:.35rem;margin-top:.9rem;
 }
 
 ul.pts{list-style:none;display:flex;flex-direction:column;gap:.55rem}
@@ -516,6 +527,74 @@ ul.pts li::before{
   content:'';position:absolute;left:0;top:.7em;
   width:7px;height:1px;background:var(--gold);opacity:.5;
 }
+
+/* =====================================================
+   EXPERIENCE GRID (horizontal card layout)
+   ===================================================== */
+.exp-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:1px;background:var(--border);
+  border:1px solid var(--border);border-radius:8px;overflow:hidden;
+}
+.exp-card{
+  background:var(--card-bg);padding:1.6rem 1.4rem;
+  display:flex;flex-direction:column;
+  transition:background .3s;
+  overflow-y:auto;
+  position:relative;
+}
+.exp-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--gold),transparent);
+  opacity:0;transition:opacity .3s;
+}
+.exp-card:hover{background:var(--card-hover)}
+.exp-card:hover::before{opacity:1}
+.exp-card-period{
+  font-family:'IBM Plex Mono',monospace;font-size:.6rem;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--gold);
+  margin-bottom:.9rem;
+}
+.exp-card-header{
+  display:flex;align-items:center;gap:.85rem;margin-bottom:.5rem;
+}
+.exp-card-name{
+  font-family:'Cormorant Garamond',serif;font-size:1.45rem;font-weight:700;
+  color:var(--text-hi);line-height:1.05;
+}
+.exp-card-role{
+  font-size:.82rem;font-style:italic;color:var(--text);
+  margin-bottom:.85rem;margin-top:.25rem;line-height:1.45;
+}
+.exp-card-desc{
+  font-size:.86rem;color:var(--text);line-height:1.72;
+}
+.exp-card-tags{
+  margin-top:auto;padding-top:.9rem;
+  border-top:1px solid var(--border);
+  display:flex;flex-wrap:wrap;gap:.35rem;
+}
+/* Sub-clients inside Virtusa card */
+.exp-sub{
+  border-top:1px solid var(--border);
+  margin-top:.9rem;padding-top:.9rem;
+  display:flex;flex-direction:column;gap:.85rem;
+}
+.exp-sub-label{
+  font-family:'IBM Plex Mono',monospace;font-size:.57rem;
+  letter-spacing:.13em;text-transform:uppercase;color:var(--text-lo);
+  margin-bottom:-.2rem;
+}
+.exp-sub-co{
+  display:flex;align-items:center;gap:.6rem;
+  font-family:'IBM Plex Mono',monospace;font-size:.6rem;
+  letter-spacing:.08em;text-transform:uppercase;color:var(--gold);
+  margin-bottom:.25rem;
+  text-decoration:none;transition:color .2s;
+}
+.exp-sub-co:hover{color:var(--gold-lt)}
+.exp-sub-desc{font-size:.83rem;color:var(--text);line-height:1.62}
 
 /* Client sub-block */
 .cl-blk{
@@ -642,6 +721,78 @@ ul.pts li::before{
   border-left:2px solid var(--border-hi);
   background:var(--gold-dim);border-radius:0 4px 4px 0;
   font-size:.88rem;font-style:italic;color:var(--text);line-height:1.6;
+}
+
+/* =====================================================
+   PERSONAL PROJECTS
+   ===================================================== */
+.proj-grid{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:2rem;align-items:start;
+}
+.proj-card{
+  background:var(--surface);border:1px solid var(--border);border-radius:10px;
+  padding:2.2rem 2rem;
+  display:flex;flex-direction:column;gap:1.2rem;
+  transition:border-color .3s,box-shadow .3s,background .4s;
+  position:relative;overflow:hidden;
+}
+.proj-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--gold),transparent);
+  opacity:0;transition:opacity .3s;
+}
+.proj-card:hover{border-color:var(--border-md);box-shadow:var(--shadow-sm)}
+.proj-card:hover::before{opacity:1}
+.proj-card-header{display:flex;flex-direction:column;gap:.4rem}
+.proj-name{
+  font-family:'Cormorant Garamond',serif;font-size:1.7rem;font-weight:700;
+  color:var(--text-hi);line-height:1.1;
+}
+.proj-tagline{
+  font-family:'IBM Plex Mono',monospace;font-size:.63rem;
+  letter-spacing:.1em;color:var(--gold);text-transform:uppercase;
+}
+.proj-desc{font-size:.93rem;color:var(--text);line-height:1.72}
+.proj-highlights{
+  list-style:none;display:flex;flex-direction:column;gap:.45rem;
+}
+.proj-highlights li{
+  font-size:.88rem;color:var(--text);line-height:1.6;
+  padding-left:1.1rem;position:relative;
+}
+.proj-highlights li::before{
+  content:'→';position:absolute;left:0;color:var(--gold);font-size:.75rem;top:.05rem;
+}
+.proj-callout{
+  padding:.9rem 1.1rem;
+  border-left:2px solid var(--gold);
+  background:var(--gold-dim);border-radius:0 4px 4px 0;
+  font-size:.84rem;font-style:italic;color:var(--text);line-height:1.6;
+}
+.proj-callout strong{color:var(--gold);font-style:normal}
+.proj-links{display:flex;gap:.8rem;flex-wrap:wrap}
+.proj-link{
+  display:flex;align-items:center;gap:.45rem;
+  font-family:'IBM Plex Mono',monospace;font-size:.63rem;
+  letter-spacing:.1em;text-transform:uppercase;
+  color:var(--gold);padding:.38rem .85rem;
+  border:1px solid var(--border-hi);background:var(--gold-dim);border-radius:3px;
+  transition:background .2s,box-shadow .2s;
+}
+.proj-link:hover{background:rgba(212,168,67,.18);box-shadow:0 4px 16px var(--gold-glow)}
+.proj-link-ico{font-size:.72rem}
+.proj-tags{display:flex;flex-wrap:wrap;gap:.4rem}
+/* Placeholder card for future projects */
+.proj-card-placeholder{
+  background:transparent;border:1px dashed var(--border);border-radius:10px;
+  padding:2.2rem 2rem;min-height:200px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.6rem;
+  opacity:.4;
+}
+.proj-card-placeholder span{
+  font-family:'IBM Plex Mono',monospace;font-size:.63rem;
+  letter-spacing:.15em;text-transform:uppercase;color:var(--text-lo);
 }
 
 /* =====================================================
@@ -837,21 +988,27 @@ ul.pts li::before{
 .edu-row{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem}
 .edu-card{
   background:var(--surface);border:1px solid var(--border);
-  padding:2.2rem 1.8rem;border-radius:8px;position:relative;overflow:hidden;
+  padding:2rem 1.8rem 1.8rem;border-radius:10px;position:relative;overflow:hidden;
   transition:border-color .3s,transform .3s,box-shadow .3s,background .4s;
   display:flex;flex-direction:column;
 }
-.edu-card:hover{border-color:var(--border-hi);transform:translateY(-4px);box-shadow:var(--shadow-sm)}
-.edu-glow{
-  position:absolute;top:0;left:0;right:0;height:2px;
-  background:linear-gradient(to right,transparent,var(--gold),transparent);
+.edu-card:hover{border-color:var(--border-hi);transform:translateY(-5px);box-shadow:var(--shadow-sm)}
+.edu-card::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);
   opacity:0;transition:opacity .3s;
 }
-.edu-card:hover .edu-glow{opacity:1}
-.uni-logo-wrap{margin-bottom:1.2rem}
+.edu-card:hover::after{opacity:1}
+/* Large ghost year number in background */
+.edu-card-yr-bg{
+  position:absolute;top:-1rem;right:.8rem;
+  font-family:'Cormorant Garamond',serif;font-size:6rem;font-weight:700;
+  color:var(--gold);opacity:.04;line-height:1;pointer-events:none;user-select:none;
+}
+.uni-logo-wrap{margin-bottom:1.4rem}
 .uni-logo{
-  height:64px;max-width:180px;object-fit:contain;border-radius:8px;
-  filter:grayscale(30%);opacity:.85;transition:opacity .2s,filter .2s;
+  height:52px;max-width:160px;object-fit:contain;
+  filter:grayscale(40%);opacity:.75;transition:opacity .3s,filter .3s;
 }
 [data-theme="light"] .uni-logo{filter:none;opacity:1}
 .edu-card:hover .uni-logo{opacity:1;filter:none}
@@ -861,65 +1018,121 @@ ul.pts li::before{
   color:var(--gold);
 }
 .edu-yr{
-  font-family:'IBM Plex Mono',monospace;font-size:.62rem;
-  letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:.7rem;
+  font-family:'IBM Plex Mono',monospace;font-size:.6rem;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--gold);
+  margin-bottom:.6rem;display:flex;align-items:center;gap:.5rem;
 }
+.edu-yr::before{content:'';width:18px;height:1px;background:var(--gold);opacity:.6}
 .edu-deg{
-  font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:600;
-  color:var(--text-hi);line-height:1.3;margin-bottom:.45rem;flex:1;
+  font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:600;
+  color:var(--text-hi);line-height:1.3;margin-bottom:.5rem;flex:1;
 }
 .edu-sch{
-  font-family:'Outfit',sans-serif;font-size:.84rem;
-  font-weight:300;font-style:italic;color:var(--text-lo);
+  font-family:'Outfit',sans-serif;font-size:.82rem;
+  font-weight:300;font-style:italic;color:var(--text-lo);margin-top:auto;
+}
+
+/* Certifications inside education section */
+.edu-certs{
+  display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1.6rem;
+}
+.edu-cert-card{
+  display:flex;align-items:center;gap:1.2rem;
+  padding:1.2rem 1.5rem;
+  background:var(--surface);border:1px solid var(--border);border-radius:8px;
+  text-decoration:none;
+  transition:border-color .3s,background .3s,transform .2s;
+  position:relative;overflow:hidden;
+}
+.edu-cert-card::before{
+  content:'';position:absolute;left:0;top:0;bottom:0;width:2px;
+  background:var(--gold);opacity:0;transition:opacity .3s;
+}
+.edu-cert-card:hover{border-color:var(--border-hi);background:var(--gold-dim);transform:translateX(3px)}
+.edu-cert-card:hover::before{opacity:1}
+.edu-cert-badge{
+  width:44px;height:44px;object-fit:contain;flex-shrink:0;
+}
+.edu-cert-info{display:flex;flex-direction:column;gap:.2rem}
+.edu-cert-name{
+  font-family:'Outfit',sans-serif;font-size:.88rem;font-weight:500;
+  color:var(--text-hi);line-height:1.35;
+}
+.edu-cert-verify{
+  font-family:'IBM Plex Mono',monospace;font-size:.58rem;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--gold);
 }
 
 .affil{
-  margin-top:2.2rem;display:flex;align-items:center;gap:1.2rem;
-  padding:1.4rem 1.9rem;background:var(--gold-dim);
+  margin-top:1.4rem;display:flex;align-items:center;gap:1rem;
+  padding:1rem 1.5rem;background:var(--gold-dim);
   border:1px solid var(--border-hi);border-radius:5px;
 }
 .affil-lbl{
-  font-family:'IBM Plex Mono',monospace;font-size:.6rem;
+  font-family:'IBM Plex Mono',monospace;font-size:.58rem;
   letter-spacing:.16em;text-transform:uppercase;color:var(--gold);white-space:nowrap;
 }
 .affil-sep{width:4px;height:4px;background:var(--gold);border-radius:50%;opacity:.45;flex-shrink:0}
-.affil-val{font-size:.88rem;font-style:italic;color:var(--text)}
+.affil-val{font-size:.85rem;font-style:italic;color:var(--text)}
 
 /* =====================================================
    CONTACT
    ===================================================== */
-#contact{border-top:1px solid var(--border);text-align:center;position:relative}
-.ct-inner{max-width:640px;margin:0 auto}
+#contact{border-top:1px solid var(--border);position:relative;overflow:hidden}
+#contact::before{
+  content:'';position:absolute;bottom:-20%;left:50%;transform:translateX(-50%);
+  width:60%;height:60%;
+  background:radial-gradient(ellipse at center,var(--gold-glow) 0%,transparent 70%);
+  pointer-events:none;
+}
+.ct-inner{max-width:760px;margin:0 auto;text-align:center;position:relative;z-index:1}
 .ct-sub{
-  font-family:'Cormorant Garamond',serif;font-size:1.1rem;
-  font-weight:300;font-style:italic;color:var(--text);margin-bottom:2.8rem;
+  font-family:'Cormorant Garamond',serif;font-size:1.15rem;
+  font-weight:300;font-style:italic;color:var(--text);margin-bottom:3rem;
 }
 .ct-cards{
   display:grid;grid-template-columns:repeat(3,1fr);
-  gap:1px;background:var(--border);
-  border:1px solid var(--border);border-radius:6px;overflow:hidden;margin-bottom:2.5rem;
+  gap:1rem;margin-bottom:2rem;
 }
 .ct-card{
-  background:var(--surface);padding:1.9rem 1.2rem;
-  display:flex;flex-direction:column;align-items:center;gap:.3rem;
-  transition:background .2s;
+  background:var(--surface);padding:2rem 1.4rem;
+  display:flex;flex-direction:column;align-items:center;gap:.9rem;
+  border:1px solid var(--border);border-radius:10px;
+  text-decoration:none;
+  transition:border-color .3s,background .3s,transform .25s,box-shadow .3s;
+  position:relative;overflow:hidden;
 }
-.ct-card:hover{background:var(--gold-dim)}
+.ct-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);
+  opacity:0;transition:opacity .3s;
+}
+.ct-card:hover{border-color:var(--border-hi);background:var(--gold-dim);transform:translateY(-4px);box-shadow:var(--shadow-sm)}
+.ct-card:hover::before{opacity:1}
+.ct-ico{
+  width:40px;height:40px;border-radius:50%;
+  background:var(--gold-dim);border:1px solid var(--border-hi);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--gold);transition:background .3s,border-color .3s;
+}
+.ct-card:hover .ct-ico{background:rgba(212,168,67,.22)}
 .ct-l{
-  font-family:'IBM Plex Mono',monospace;font-size:.58rem;
-  letter-spacing:.16em;text-transform:uppercase;color:var(--text-lo);
+  font-family:'IBM Plex Mono',monospace;font-size:.57rem;
+  letter-spacing:.18em;text-transform:uppercase;color:var(--text-lo);
 }
 .ct-v{
-  font-family:'Outfit',sans-serif;font-size:.84rem;font-weight:500;
-  color:var(--gold);transition:color .2s;
+  font-family:'Outfit',sans-serif;font-size:.92rem;font-weight:500;
+  color:var(--gold);transition:color .2s;line-height:1.3;
 }
 .ct-card:hover .ct-v{color:var(--gold-lt)}
-.loc-badge{
-  display:inline-flex;align-items:center;gap:.5rem;
-  padding:.5rem 1.2rem;border:1px solid var(--border-md);
-  border-radius:100px;color:var(--text-lo);font-size:.84rem;
+.loc-strip{
+  display:flex;align-items:center;justify-content:center;gap:1.2rem;
+  margin-top:.5rem;
+  font-family:'IBM Plex Mono',monospace;font-size:.62rem;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--text-lo);
 }
-.loc-badge strong{color:var(--gold);font-weight:500}
+.loc-strip-dot{width:3px;height:3px;background:var(--gold);border-radius:50%;opacity:.5}
+.loc-strip strong{color:var(--gold);font-weight:400}
 
 /* =====================================================
    FOOTER
@@ -983,6 +1196,8 @@ footer{
   .edu-row{grid-template-columns:1fr 1fr}
   .sk-grid{grid-template-columns:1fr}
   .os-card{grid-template-columns:1fr}
+  .exp-grid{grid-template-columns:repeat(2,1fr)}
+  #experience{height:auto;min-height:100vh}
 }
 @media(max-width:768px){
   /* ---- Reset the desktop scroll-container approach ---- */
@@ -1024,6 +1239,7 @@ footer{
   .affil{flex-direction:column;text-align:center}
   .certs-row{grid-template-columns:1fr}
   .sk-grid{grid-template-columns:1fr}
+  .exp-grid{grid-template-columns:1fr}
   #side-nav{display:none}
   #back-top{right:1.5rem;bottom:1.5rem}
 }
@@ -1041,14 +1257,13 @@ footer{
 <!-- Side dot navigator -->
 <div id="side-nav" role="navigation" aria-label="Section navigation">
   <a class="sdot" data-label="Home"           data-sec="hero"           href="#hero"></a>
-  <a class="sdot" data-label="Expertise"      data-sec="competencies"   href="#competencies"></a>
   <a class="sdot" data-label="Experience"     data-sec="experience"     href="#experience"></a>
   <a class="sdot" data-label="Skills"         data-sec="skills"         href="#skills"></a>
   <a class="sdot" data-label="Open Source"    data-sec="opensource"     href="#opensource"></a>
-  <a class="sdot" data-label="Certifications" data-sec="certifications" href="#certifications"></a>
-  <a class="sdot" data-label="Education"       data-sec="education"       href="#education"></a>
+  <a class="sdot" data-label="Projects"       data-sec="projects"       href="#projects"></a>
+  <a class="sdot" data-label="Education"      data-sec="education"      href="#education"></a>
   <a class="sdot" data-label="Recommendations" data-sec="recommendations" href="#recommendations"></a>
-  <a class="sdot" data-label="Contact"         data-sec="contact"         href="#contact"></a>
+  <a class="sdot" data-label="Contact"        data-sec="contact"        href="#contact"></a>
 </div>
 
 <!-- ======================================================
@@ -1057,11 +1272,10 @@ footer{
 <nav>
   <div class="nav-logo">Shihaaz <em>Buhary</em></div>
   <ul class="nav-links">
-    <li><a href="#competencies">Expertise</a></li>
     <li><a href="#experience">Experience</a></li>
     <li><a href="#skills">Skills</a></li>
     <li><a href="#opensource">Open Source</a></li>
-    <li><a href="#certifications">Certifications</a></li>
+    <li><a href="#projects">Projects</a></li>
     <li><a href="#education">Education</a></li>
     <li><a href="#recommendations">Recommendations</a></li>
     <li><a href="#contact">Contact</a></li>
@@ -1150,219 +1364,120 @@ footer{
 </section>
 
 <!-- ======================================================
-     COMPETENCIES
-     ====================================================== -->
-<section class="sec sec-alt snap-page" id="competencies">
-  <div class="sec-ey rev"><div class="se-line"></div><span class="se-txt">Expertise</span></div>
-  <h2 class="sh rev">Core Competencies</h2>
-  <div class="cg rev">
-    <div class="cc">
-      <div class="cc-bar"></div>
-      <span class="cc-ico">⬡</span>
-      <h3>Systems Architecture</h3>
-      <p>Modernizing monoliths to microservices, API-first design, and integration strategies for enterprise-grade platforms built to scale.</p>
-    </div>
-    <div class="cc">
-      <div class="cc-bar"></div>
-      <span class="cc-ico">◈</span>
-      <h3>DevSecOps and Secure SDLC</h3>
-      <p>SAST/DAST governance, secrets management with HashiCorp Vault, and embedding security throughout every CI/CD pipeline stage.</p>
-    </div>
-    <div class="cc">
-      <div class="cc-bar"></div>
-      <span class="cc-ico">✦</span>
-      <h3>Applied AI and ML</h3>
-      <p>Conversational AI, RAG pipelines with Amazon Bedrock Knowledge Bases, and AI-led product strategy for enterprise environments.</p>
-    </div>
-    <div class="cc">
-      <div class="cc-bar"></div>
-      <span class="cc-ico">◉</span>
-      <h3>Cloud-Native Engineering</h3>
-      <p>Containerization, Kubernetes orchestration, AWS infrastructure design, and performance optimization at enterprise scale.</p>
-    </div>
-    <div class="cc">
-      <div class="cc-bar"></div>
-      <span class="cc-ico">⬢</span>
-      <h3>Enterprise Integrations</h3>
-      <p>IDE, CI/CD, ticketing, and CRM/ERP integrations — 15+ delivered and adopted by 200+ global enterprise security customers.</p>
-    </div>
-    <div class="cc">
-      <div class="cc-bar"></div>
-      <span class="cc-ico">⬖</span>
-      <h3>Engineering Leadership</h3>
-      <p>Led cross-continent squads of up to 14 across the US, Sri Lanka, and Europe. Roadmaps, mentoring, and full stakeholder alignment.</p>
-    </div>
-  </div>
-</section>
-
-<!-- ======================================================
      EXPERIENCE
      ====================================================== -->
 <section class="sec" id="experience">
   <div class="sec-ey rev"><div class="se-line"></div><span class="se-txt">Career</span></div>
   <h2 class="sh rev">Professional Experience</h2>
 
-  <div class="tl">
+  <div class="exp-grid rev">
 
     <!-- SkillX -->
-    <div class="tl-item rev">
-      <div class="tl-dot"></div>
-      <div class="tl-header">
+    <div class="exp-card">
+      <div class="exp-card-period">Jan 2026 · Present</div>
+      <div class="exp-card-header">
         <img class="co-logo" src="images/company-logos/skillx.png"
-          onerror="this.outerHTML='<div class=\'co-logo-fb\'>SkillX</div>'"
+          onerror="this.outerHTML='<div class=\'co-logo-fb\'>SX</div>'"
           alt="SkillX">
-        <div class="tl-header-text">
-          <div class="tl-period">Jan 2026 — Present</div>
-          <div class="tl-co">SkillX</div>
-        </div>
+        <div class="exp-card-name">SkillX</div>
       </div>
-      <div class="tl-role">Founder and Principal Architect · Early-stage EdTech Startup</div>
-      <ul class="pts">
-        <li>Incubated a mobile-first learning platform end-to-end, owning product vision and full technical architecture.</li>
-        <li>Designed scalable, API-first systems spanning React Native mobile clients and Spring Boot microservices.</li>
-        <li>Shaped AI-assisted learning and content recommendation concepts to guide the overall platform strategy.</li>
-        <li>Evaluated cloud infrastructure economics and scalability trade-offs to inform launch and growth decisions.</li>
-      </ul>
-      <div class="tl-tags">
-        <span class="ttag hi">React Native</span><span class="ttag hi">Spring Boot</span>
-        <span class="ttag hi">AWS</span><span class="ttag">TypeScript</span>
-        <span class="ttag">PostgreSQL</span><span class="ttag">Redis</span>
-        <span class="ttag">Docker</span><span class="ttag">Applied AI</span>
-        <span class="ttag">JWT / OAuth2</span><span class="ttag">Microservices</span>
+      <div class="exp-card-role">Founder &amp; Principal Architect · EdTech Startup</div>
+      <p class="exp-card-desc">
+        Building an AI-powered mobile learning platform from scratch, owning product vision, cloud architecture, and full-stack delivery. API-first Spring Boot microservices with a React Native frontend and AI-assisted content recommendations at the core.
+      </p>
+      <div class="exp-card-tags">
+        <span class="ttag hi">React Native</span>
+        <span class="ttag hi">Spring Boot</span>
+        <span class="ttag hi">AWS</span>
+        <span class="ttag">Applied AI</span>
+        <span class="ttag">Microservices</span>
       </div>
     </div>
 
     <!-- Avenga -->
-    <div class="tl-item rev">
-      <div class="tl-dot"></div>
-      <div class="tl-header">
+    <div class="exp-card">
+      <div class="exp-card-period">Oct 2022 · Dec 2025</div>
+      <div class="exp-card-header">
         <img class="co-logo" src="images/company-logos/avenga.png"
-          onerror="this.outerHTML='<div class=\'co-logo-fb\'>Avenga</div>'"
+          onerror="this.outerHTML='<div class=\'co-logo-fb\'>AV</div>'"
           alt="Avenga">
-        <div class="tl-header-text">
-          <div class="tl-period">Oct 2022 — Dec 2025</div>
-          <a class="tl-co co-link" href="https://www.avenga.com/" target="_blank" rel="noopener">Avenga</a>
-        </div>
+        <a class="exp-card-name co-link" style="font-size:1.45rem" href="https://www.avenga.com/" target="_blank" rel="noopener">Avenga</a>
       </div>
-      <div class="tl-role">Senior Software Engineer / Technical Lead · Bulgaria</div>
-      <ul class="pts">
-        <li>Modernized the Person2 performance management platform with a React and TypeScript UI embedded in CUBA; cut navigation latency by 45%.</li>
-        <li>Refactored SQL queries and service logic; improved p95 response times by 30% and eliminated duplicated code.</li>
-        <li>Implemented AOP/AspectJ runtime security, expanding authorization and auditing beyond the platform's built-in capabilities.</li>
-        <li>Migrated database versions and integrated external views on MS SQL Server for unified analytics access.</li>
-        <li>Mentored engineers and standardized code review and testing practices using JUnit and Mockito.</li>
-      </ul>
-      <div class="tl-tags">
-        <span class="ttag hi">Java</span><span class="ttag hi">Spring</span>
-        <span class="ttag hi">React</span><span class="ttag hi">TypeScript</span>
-        <span class="ttag">CUBA Platform</span><span class="ttag">MS SQL Server</span>
-        <span class="ttag">Docker</span><span class="ttag">Kubernetes</span>
-        <span class="ttag">OpenShift</span><span class="ttag">AOP / AspectJ</span>
-        <span class="ttag">GitLab</span><span class="ttag">Gradle</span>
+      <div class="exp-card-role">Senior Software Engineer / Technical Lead · Bulgaria</div>
+      <p class="exp-card-desc">
+        Modernized an enterprise performance management platform, cutting UI latency by 45% and backend response times by 30%, while pushing runtime security beyond what the platform natively offered. Mentored engineers and shaped team practices.
+      </p>
+      <div class="exp-card-tags">
+        <span class="ttag hi">Java</span>
+        <span class="ttag hi">Spring</span>
+        <span class="ttag hi">React</span>
+        <span class="ttag hi">TypeScript</span>
+        <span class="ttag">Kubernetes</span>
+        <span class="ttag">AOP / AspectJ</span>
       </div>
     </div>
 
     <!-- Virtusa -->
-    <div class="tl-item rev">
-      <div class="tl-dot"></div>
-      <div class="tl-header">
+    <div class="exp-card">
+      <div class="exp-card-period">May 2017 · Jul 2024</div>
+      <div class="exp-card-header">
         <img class="co-logo" src="images/company-logos/virtusa.png"
-          onerror="this.outerHTML='<div class=\'co-logo-fb\'>Virtusa</div>'"
+          onerror="this.outerHTML='<div class=\'co-logo-fb\'>VT</div>'"
           alt="Virtusa">
-        <div class="tl-header-text">
-          <div class="tl-period">May 2017 — Jul 2024</div>
-          <a class="tl-co co-link" href="https://www.virtusa.com/" target="_blank" rel="noopener">Virtusa</a>
+        <a class="exp-card-name co-link" style="font-size:1.45rem" href="https://www.virtusa.com/" target="_blank" rel="noopener">Virtusa</a>
+      </div>
+      <div class="exp-card-role">Senior Lead Software Engineer · USA</div>
+      <p class="exp-card-desc">Seven years delivering for enterprise clients across cybersecurity and customer engagement, progressing from engineer to Architect and Senior Lead. Built high-performing cross-continent teams and earned the Virtusa Rockstar Award in 2021 for innovation in enterprise delivery.</p>
+      <div class="exp-sub">
+        <div class="exp-sub-label">Key clients</div>
+        <div>
+          <a class="exp-sub-co" href="https://www.veracode.com/" target="_blank" rel="noopener">
+            <img class="cl-logo" src="images/company-logos/veracode.png" onerror="this.style.display='none'" alt="Veracode">
+            Veracode · Architect / TL
+          </a>
+          <p class="exp-sub-desc">Led 15+ CI/CD integrations, migrated from JBoss to Spring Boot, ran a 14-person cross-continent team.</p>
+        </div>
+        <div>
+          <a class="exp-sub-co" href="https://www.verint.com/" target="_blank" rel="noopener">
+            <img class="cl-logo" src="images/company-logos/verint.png" onerror="this.style.display='none'" alt="Verint">
+            Verint · Architect / STL
+          </a>
+          <p class="exp-sub-desc">Real-time Kafka pipelines, hardened secret management, and conversational AI prototyping using a RAG approach.</p>
         </div>
       </div>
-      <div class="tl-role">Senior Lead Software Engineer · USA</div>
-      <ul class="pts">
-        <li>Directed modernization, secure integrations, and R&amp;D/presales delivery for global enterprise clients.</li>
-        <li>Interviewed 100+ candidates, mentored cross-account engineers, and delivered org-wide technical training programs.</li>
-        <li>Awarded the Virtusa Rockstar award in 2021 for exceptional innovation in enterprise delivery.</li>
-      </ul>
-
-      <!-- Verint -->
-      <div class="cl-blk">
-        <div class="cl-lbl">
-          <img class="cl-logo" src="images/company-logos/verint.png"
-            onerror="this.outerHTML='<div class=\'cl-logo-fb\'>Verint</div>'"
-            alt="Verint">
-          <a href="https://www.verint.com/" target="_blank" rel="noopener" class="co-link-sm">Verint</a> — Architect / Senior Technical Lead
-        </div>
-        <ul class="pts">
-          <li>Built Salesforce and MS Dynamics microservices via Kafka, enabling real-time forecasting and scheduling pipelines.</li>
-          <li>Integrated HashiCorp Vault with Harness CI/CD pipelines; eliminated 90% of secret management issues.</li>
-          <li>Prototyped conversational analytics using Amazon Bedrock RAG; meaningfully improved AI response relevance in call-center trials.</li>
-          <li>Introduced Datadog monitoring across services; cut incident resolution time by 40% and raised SLA compliance.</li>
-        </ul>
-      </div>
-
-      <!-- Veracode -->
-      <div class="cl-blk">
-        <div class="cl-lbl">
-          <img class="cl-logo" src="images/company-logos/veracode.png"
-            onerror="this.outerHTML='<div class=\'cl-logo-fb\'>Veracode</div>'"
-            alt="Veracode">
-          <a href="https://www.veracode.com/" target="_blank" rel="noopener" class="co-link-sm">Veracode</a>, Burlington MA — Architect / Technical Lead / SSE
-        </div>
-        <ul class="pts">
-          <li>Delivered 15+ enterprise-grade integrations connecting Veracode with IDEs, CI/CD pipelines, and ticketing tools for 200+ enterprise clients.</li>
-          <li>Migrated the Veracode platform from legacy JBoss to Spring Boot; halved deployment times and improved scalability significantly.</li>
-          <li>Led a 14-member scrum team, boosting release velocity by 35% through stronger testing and observability practices.</li>
-          <li>Cut enterprise client onboarding from weeks to days through an API-first strategy and an evolved integration roadmap.</li>
-          <li>Championed DevSecOps: embedded SAST/DAST automation into all CI/CD pipelines across the engineering organization.</li>
-          <li>Coordinated cross-continent teams across the US, Sri Lanka, and Europe with consistent delivery and cultural alignment.</li>
-        </ul>
-      </div>
-
-      <div class="tl-tags">
-        <span class="ttag hi">Java</span><span class="ttag hi">Spring Boot</span>
-        <span class="ttag hi">Kafka</span><span class="ttag hi">AWS</span>
-        <span class="ttag hi">Amazon Bedrock</span><span class="ttag">Kubernetes</span>
-        <span class="ttag">HashiCorp Vault</span><span class="ttag">Harness</span>
-        <span class="ttag">Datadog</span><span class="ttag">DevSecOps</span>
-        <span class="ttag">PostgreSQL</span><span class="ttag">Docker</span>
-        <span class="ttag">New Relic</span><span class="ttag">Sumo Logic</span>
+      <div class="exp-card-tags">
+        <span class="ttag hi">Java</span>
+        <span class="ttag hi">Spring Boot</span>
+        <span class="ttag hi">Kafka</span>
+        <span class="ttag hi">AWS</span>
+        <span class="ttag">DevSecOps</span>
+        <span class="ttag">Amazon Bedrock</span>
       </div>
     </div>
 
     <!-- Informatics -->
-    <div class="tl-item rev">
-      <div class="tl-dot"></div>
-      <div class="tl-header">
+    <div class="exp-card">
+      <div class="exp-card-period">Jul 2010 · Apr 2017</div>
+      <div class="exp-card-header">
         <img class="co-logo" src="images/company-logos/informatics.png"
           onerror="this.outerHTML='<div class=\'co-logo-fb\'>IIL</div>'"
           alt="Informatics">
-        <div class="tl-header-text">
-          <div class="tl-period">Jul 2010 — Apr 2017</div>
-          <a class="tl-co co-link" href="https://www.informaticsint.com/" target="_blank" rel="noopener">Informatics</a>
-        </div>
+        <a class="exp-card-name co-link" style="font-size:1.45rem" href="https://www.informaticsint.com/" target="_blank" rel="noopener">Informatics</a>
       </div>
-      <div class="tl-role">Senior Software Engineer · Sri Lanka</div>
-      <ul class="pts">
-        <li>Built mediation and billing systems, BPMN 2.0 workflow platforms, and self-care portals; modernized UIs replacing legacy Oracle Forms.</li>
-        <li>Integrated cold storage management with SAP via Rosettanet XML for GlaxoSmithKline; cut manual data errors by 60%.</li>
-        <li>Developed operational dashboards for the Dept. of Registration of Persons, enabling real-time decisions for DRP officers.</li>
-        <li>Built a conference registration portal with payment gateway and admin tooling; reduced participant onboarding time by 50%.</li>
-      </ul>
-      <div class="tl-tags">
-        <span class="ttag hi">Java</span><span class="ttag hi">Spring</span>
-        <span class="ttag">Hibernate</span><span class="ttag">JBPM</span>
-        <span class="ttag">PrimeFaces</span><span class="ttag">IceFaces</span>
-        <span class="ttag">Oracle</span><span class="ttag">SAP Integration</span>
-        <span class="ttag">Tomcat</span><span class="ttag">JavaScript</span>
+      <div class="exp-card-role">Senior Software Engineer · Sri Lanka</div>
+      <p class="exp-card-desc">
+        Billing systems, BPMN workflow platforms, SAP integrations, and government operational dashboards across telecom, pharma, and public sector clients in Sri Lanka. Where the foundations were laid.
+      </p>
+      <div class="exp-card-tags">
+        <span class="ttag hi">Java</span>
+        <span class="ttag hi">Spring</span>
+        <span class="ttag">Oracle</span>
+        <span class="ttag">SAP Integration</span>
+        <span class="ttag">JBPM</span>
       </div>
     </div>
 
-  </div><!-- .tl -->
-
-  <!-- Scroll-continue nudge -->
-  <div class="exp-hint">
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="color:var(--gold);flex-shrink:0">
-      <path d="M12 5v14M5 15l7 7 7-7"/>
-    </svg>
-    Continue scrolling for Skills
-  </div>
+  </div><!-- .exp-grid -->
 
 </section>
 
@@ -1454,9 +1569,7 @@ footer{
       </div>
 
       <p class="os-desc">
-        A post-build Jenkins plugin that automates application submission to Veracode for security scanning —
-        covering SAST, SCA, DAST, and IAST — directly within CI/CD pipelines. Used by enterprises globally
-        to embed security into every build.
+        A post-build Jenkins plugin that automates application submission to Veracode for security scanning (SAST, SCA, DAST, and IAST) directly within CI/CD pipelines. Used by enterprises globally to embed security into every build.
       </p>
 
       <div class="os-links">
@@ -1506,59 +1619,65 @@ footer{
 </section>
 
 <!-- ======================================================
-     CERTIFICATIONS
+     PERSONAL PROJECTS
      ====================================================== -->
-<section class="sec snap-page" id="certifications">
-  <div class="sec-ey rev"><div class="se-line"></div><span class="se-txt">Credentials</span></div>
-  <h2 class="sh rev">Certifications</h2>
-  <div class="certs-row rev">
+<section class="sec snap-page" id="projects">
+  <div class="sec-ey rev"><div class="se-line"></div><span class="se-txt">Personal Projects</span></div>
+  <h2 class="sh rev">Things I've Built</h2>
 
-    <a class="cert-card"
-       href="https://www.credly.com/badges/ba873f6e-8f61-4195-91ee-0d6b7764022f"
-       target="_blank" rel="noopener">
-      <!-- <div class="cert-badge-fb"> -->
-        <img class="cert-badge-img"
-          src="images/company-logos/aws-cert-pro.png"
-          onerror="this.style.display='none'"
-          alt="AWS Pro Badge">
-        <!-- ☁
-      </div> -->
-      <div class="cert-info">
-        <div class="cert-name">AWS Certified Solutions Architect — Professional</div>
-        <div class="cert-verify">Verify on Credly</div>
-      </div>
-    </a>
+  <div class="proj-grid rev">
 
-    <a class="cert-card"
-       href="https://www.credly.com/badges/c772e34b-fa36-4d58-a5c3-6f75b063676d"
-       target="_blank" rel="noopener">
-      <!-- <div class="cert-badge-fb"> -->
-        <img class="cert-badge-img"
-          src="images/company-logos/aws-cert-assoc.png"
-          onerror="this.style.display='none'"
-          alt="AWS Associate Badge">
-        <!-- ☁
-      </div> -->
-      <div class="cert-info">
-        <div class="cert-name">AWS Certified Solutions Architect — Associate</div>
-        <div class="cert-verify">Verify on Credly</div>
+    <!-- Smart Job Application Tracker -->
+    <div class="proj-card">
+      <div class="proj-card-header">
+        <div class="proj-name">Smart Job Application Tracker</div>
+        <div class="proj-tagline">AI-powered job search management</div>
       </div>
-    </a>
+
+      <p class="proj-desc">
+        A full-stack app for tracking job applications with a complete status timeline, AI-powered resume analysis against any job description, and an analytics dashboard showing your pipeline at a glance. The AI layer returns a match score, keyword gaps, and improvement suggestions.
+      </p>
+
+      <div class="proj-tags">
+        <span class="ttag hi">Next.js 14</span>
+        <span class="ttag hi">TypeScript</span>
+        <span class="ttag hi">Groq / LLaMA 3.3</span>
+        <span class="ttag">Prisma</span>
+        <span class="ttag">PostgreSQL</span>
+        <span class="ttag">Tailwind CSS</span>
+        <span class="ttag">NextAuth.js</span>
+        <span class="ttag">Recharts</span>
+        <span class="ttag">Vercel</span>
+      </div>
+
+      <div class="proj-links">
+        <a class="proj-link" href="https://github.com/sbuhary/smart-job-application-tracker" target="_blank" rel="noopener">
+          <span class="proj-link-ico">◈</span> GitHub
+        </a>
+        <a class="proj-link" href="https://trackmyjobs-101.vercel.app" target="_blank" rel="noopener" id="projLiveLink">
+          <span class="proj-link-ico">↗</span> Live Demo
+        </a>
+      </div>
+    </div>
+
+    <!-- Placeholder for future projects -->
+    <div class="proj-card-placeholder">
+      <span>More coming soon</span>
+    </div>
 
   </div>
 </section>
 
 <!-- ======================================================
-     EDUCATION
+     EDUCATION & CERTIFICATIONS
      ====================================================== -->
 <section class="sec sec-alt snap-page" id="education">
-  <div class="sec-ey rev"><div class="se-line"></div><span class="se-txt">Academic</span></div>
-  <h2 class="sh rev">Education</h2>
+  <div class="sec-ey rev"><div class="se-line"></div><span class="se-txt">Academic & Credentials</span></div>
+  <h2 class="sh rev">Education & Certifications</h2>
   <div class="edu-row rev">
 
     <div class="edu-card">
-      <div class="edu-glow"></div>
-      <div class="uni-logo-wrap">
+<div class="uni-logo-wrap">
         <img class="uni-logo" src="images/university-logos/moratuwa.png"
           onerror="this.outerHTML='<div class=\'uni-logo-fb\'>University of Moratuwa</div>'"
           alt="University of Moratuwa">
@@ -1569,8 +1688,7 @@ footer{
     </div>
 
     <div class="edu-card">
-      <div class="edu-glow"></div>
-      <div class="uni-logo-wrap">
+<div class="uni-logo-wrap">
         <img class="uni-logo" src="images/university-logos/colombo.png"
           onerror="this.outerHTML='<div class=\'uni-logo-fb\'>University of Colombo</div>'"
           alt="University of Colombo">
@@ -1581,19 +1699,35 @@ footer{
     </div>
 
     <div class="edu-card">
-      <div class="edu-glow"></div>
-      <div class="uni-logo-wrap">
+<div class="uni-logo-wrap">
         <img class="uni-logo" src="images/university-logos/westminster.png"
           onerror="this.outerHTML='<div class=\'uni-logo-fb\'>University of Westminster</div>'"
           alt="University of Westminster">
       </div>
       <div class="edu-yr">2015</div>
-      <div class="edu-deg">BEng (Hons) Software Engineering<br>
-        <small style="font-size:.83em;font-weight:300;font-family:'Outfit',sans-serif">Upper Second Class Honours</small>
+      <div class="edu-deg">BEng (Hons) Software Engineering
+        <br><small style="font-size:.82em;font-weight:300;font-family:'Outfit',sans-serif;color:var(--text)">Upper Second Class Honours</small>
       </div>
       <a class="edu-sch uni-link" href="https://www.westminster.ac.uk/" target="_blank" rel="noopener">University of Westminster, UK</a>
     </div>
 
+  </div>
+
+  <div class="edu-certs rev">
+    <a class="edu-cert-card" href="https://www.credly.com/badges/ba873f6e-8f61-4195-91ee-0d6b7764022f" target="_blank" rel="noopener">
+      <img class="edu-cert-badge" src="images/company-logos/aws-cert-pro.png" onerror="this.style.display='none'" alt="AWS Pro">
+      <div class="edu-cert-info">
+        <div class="edu-cert-name">AWS Certified Solutions Architect — Professional</div>
+        <div class="edu-cert-verify">Verify on Credly ↗</div>
+      </div>
+    </a>
+    <a class="edu-cert-card" href="https://www.credly.com/badges/c772e34b-fa36-4d58-a5c3-6f75b063676d" target="_blank" rel="noopener">
+      <img class="edu-cert-badge" src="images/company-logos/aws-cert-assoc.png" onerror="this.style.display='none'" alt="AWS Associate">
+      <div class="edu-cert-info">
+        <div class="edu-cert-name">AWS Certified Solutions Architect — Associate</div>
+        <div class="edu-cert-verify">Verify on Credly ↗</div>
+      </div>
+    </a>
   </div>
 
   <div class="affil rev">
@@ -1648,33 +1782,55 @@ footer{
       <span class="se-txt">Get in Touch</span>
       <div class="se-line"></div>
     </div>
-    <h2 class="sh rev" style="margin-bottom:1rem">Open to Opportunities</h2>
+    <h2 class="sh rev" style="text-align:center;margin-bottom:.9rem">Open to Opportunities</h2>
     <p class="ct-sub rev">
-      Based in Riyadh with a Transferable Iqama. Open to senior engineering and architecture roles across KSA, UAE, and Qatar.
+      Senior engineer and architect based in Riyadh, open to roles across KSA, UAE, and Qatar.
     </p>
+
     <div class="ct-cards rev">
+      <!-- Email -->
       <a href="mailto:shihaazbz@gmail.com" class="ct-card">
+        <div class="ct-ico">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+          </svg>
+        </div>
         <span class="ct-l">Email</span>
         <span class="ct-v">shihaazbz@gmail.com</span>
       </a>
+
+      <!-- Phone -->
       <a href="tel:+966551642636" class="ct-card">
+        <div class="ct-ico">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 2.18h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 9.91a16 16 0 0 0 6.14 6.14l.91-.91a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
+          </svg>
+        </div>
         <span class="ct-l">Phone · KSA</span>
         <span class="ct-v">+966 55 164 2636</span>
       </a>
+
+      <!-- LinkedIn -->
       <a href="https://linkedin.com/in/shihaazbz" target="_blank" rel="noopener" class="ct-card">
+        <div class="ct-ico">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/>
+          </svg>
+        </div>
         <span class="ct-l">LinkedIn</span>
-        <span class="ct-v">linkedin.com/in/shihaazbz</span>
+        <span class="ct-v">in/shihaazbz</span>
       </a>
     </div>
-    <div class="loc-badge rev">
-      <span>📍</span>
+
+    <div class="loc-strip rev">
       <strong>Riyadh, Saudi Arabia</strong>
-      <span style="color:var(--text-lo);margin:0 .35rem">·</span>
-      <span>Transferable Iqama · Open to KSA / UAE / Qatar</span>
+      <div class="loc-strip-dot"></div>
+      <span>Transferable Iqama</span>
+      <div class="loc-strip-dot"></div>
+      <span>Open to KSA · UAE · Qatar</span>
     </div>
   </div>
 
-  <!-- Footer pinned to bottom of contact snap page -->
   <footer style="position:absolute;bottom:0;left:0;right:0;padding:1.2rem 9vw;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;background:transparent">
     <span class="ft">Shihaaz Buhary · Senior Software Engineer and Architect</span>
     <span class="ft">Riyadh · 2025</span>
@@ -1756,7 +1912,7 @@ document.querySelectorAll('a[href^="#"]').forEach(a=>{
 /* ---- Side nav dots ---- */
 const sideNav=document.getElementById('side-nav');
 const allDots=[...document.querySelectorAll('.sdot')];
-const sections=['hero','competencies','experience','skills','opensource','certifications','education','recommendations','contact']
+const sections=['hero','experience','skills','opensource','projects','education','recommendations','contact']
   .map(id=>document.getElementById(id)).filter(Boolean);
 
 function setActiveDot(id){
