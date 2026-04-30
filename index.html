@@ -4,6 +4,21 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Shihaaz Buhary — Senior Software Engineer and Architect</title>
+
+<!-- =====================================================
+     Google Analytics 4
+     Replace G-XXXXXXXXXX with your Measurement ID from
+     https://analytics.google.com → Admin → Data Streams
+     ===================================================== -->
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7L3RPBZF4V"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-7L3RPBZF4V');
+</script>
 <link rel="icon" type="image/png" href="images/profile-photo/shihaaz.jpg">
 <link rel="apple-touch-icon" href="images/profile-photo/shihaaz.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -391,6 +406,11 @@ nav{
 .snap-page.sec{
   padding:4.5rem 9vw 3.5rem;
 }
+/* Recommendations gets even tighter top padding — heading sits near nav */
+#recommendations.snap-page.sec{
+  padding-top:2.5rem;
+  padding-bottom:1rem;
+}
 
 .sec-ey{display:flex;align-items:center;gap:.75rem;margin-bottom:.75rem}
 .se-line{width:32px;height:1px;background:var(--gold);opacity:.55}
@@ -404,7 +424,9 @@ h2.sh{
   color:var(--text-hi);line-height:1.1;margin-bottom:3.5rem;
 }
 /* Tighter heading margin inside snap pages */
-.snap-page h2.sh{margin-bottom:2rem}
+.snap-page h2.sh{margin-bottom:1.5rem}
+/* Even tighter for recommendations — give max height to the image */
+#recommendations h2.sh{margin-bottom:1rem}
 
 /* =====================================================
    COMPETENCIES
@@ -661,6 +683,155 @@ ul.pts li::before{
 .cert-card:hover .cert-verify::before{transform:translateX(4px)}
 
 /* =====================================================
+   RECOMMENDATIONS CAROUSEL
+   ===================================================== */
+
+/* Outer stage — clips the sliding track */
+.rec-stage{
+  position:relative;
+  width:100%;
+  /* fill exactly what's left after the heading block (~160px) */
+  height:calc(100vh - 160px);
+  flex:1;
+  min-height:0;
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+}
+
+/* Sliding track — all slides sit side by side */
+.rec-track{
+  display:flex;
+  width:100%;
+  /* track itself takes all space minus dots + counter row */
+  height:calc(100% - 56px);
+  transition:transform .55s cubic-bezier(.4,0,.2,1);
+  will-change:transform;
+}
+
+/* Individual slide */
+.rec-slide{
+  flex:0 0 100%;
+  width:100%;
+  height:100%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:0 4rem;
+}
+
+/* Screenshot image — fills height, letterboxes width */
+.rec-img{
+  height:100%;
+  width:auto;
+  max-width:100%;
+  object-fit:contain;
+  border-radius:8px;
+  border:1px solid var(--border-md);
+  box-shadow:var(--shadow-sm);
+  cursor:zoom-in;
+  transition:transform .25s, box-shadow .25s, border-color .25s;
+  display:block;
+}
+.rec-img:hover{
+  transform:scale(1.012);
+  box-shadow:var(--shadow);
+  border-color:var(--border-hi);
+}
+
+/* Arrows */
+.rec-arrow{
+  position:absolute;top:50%;transform:translateY(-50%);
+  width:42px;height:42px;border-radius:50%;
+  background:var(--surface2);border:1px solid var(--border-md);
+  color:var(--gold);font-size:1.1rem;
+  display:flex;align-items:center;justify-content:center;
+  cursor:none;transition:background .2s,border-color .2s,transform .2s;
+  z-index:10;
+}
+.rec-arrow:hover{background:var(--gold);color:#0B0E15;border-color:var(--gold);transform:translateY(-50%) scale(1.08)}
+.rec-prev{left:.5rem}
+.rec-next{right:.5rem}
+.rec-arrow:disabled{opacity:.25;pointer-events:none}
+
+/* Dot indicators */
+.rec-dots{
+  display:flex;justify-content:center;gap:.55rem;
+  padding:.9rem 0 .2rem;flex-shrink:0;
+}
+.rec-dot{
+  width:7px;height:7px;border-radius:50%;
+  background:transparent;border:1.5px solid var(--text-lo);
+  transition:background .2s,border-color .2s,transform .2s;
+  cursor:none;
+}
+.rec-dot.active{background:var(--gold);border-color:var(--gold);transform:scale(1.4)}
+
+/* Counter */
+.rec-counter{
+  font-family:'IBM Plex Mono',monospace;font-size:.58rem;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--text-lo);
+  text-align:center;padding-bottom:.5rem;flex-shrink:0;
+}
+
+/* ---- LIGHTBOX ---- */
+.rec-lightbox{
+  position:fixed;inset:0;z-index:2000;
+  background:rgba(0,0,0,.92);
+  display:none;
+  align-items:center;justify-content:center;
+  flex-direction:column;gap:1rem;
+  padding:2rem;
+  animation:lbFadeIn .25s ease;
+}
+.rec-lightbox.open{display:flex}
+@keyframes lbFadeIn{from{opacity:0}to{opacity:1}}
+
+.rec-lb-img{
+  max-width:90vw;
+  max-height:85vh;
+  object-fit:contain;
+  border-radius:8px;
+  box-shadow:0 32px 80px rgba(0,0,0,.8);
+  border:1px solid rgba(212,168,67,.25);
+}
+
+.rec-lb-close{
+  position:fixed;top:1.5rem;right:1.5rem;
+  width:40px;height:40px;border-radius:50%;
+  background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);
+  color:#fff;font-size:1rem;cursor:none;
+  display:flex;align-items:center;justify-content:center;
+  transition:background .2s;z-index:2001;
+}
+.rec-lb-close:hover{background:rgba(255,255,255,.25)}
+
+.rec-lb-arrow{
+  position:fixed;top:50%;transform:translateY(-50%);
+  width:48px;height:48px;border-radius:50%;
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);
+  color:#fff;font-size:1.3rem;cursor:none;
+  display:flex;align-items:center;justify-content:center;
+  transition:background .2s;z-index:2001;
+}
+.rec-lb-arrow:hover{background:rgba(212,168,67,.35);border-color:var(--gold);color:var(--gold)}
+.rec-lb-prev{left:1.2rem}
+.rec-lb-next{right:1.2rem}
+.rec-lb-arrow:disabled{opacity:.2;pointer-events:none}
+
+.rec-lb-hint{
+  font-family:'IBM Plex Mono',monospace;font-size:.58rem;
+  letter-spacing:.14em;text-transform:uppercase;
+  color:rgba(255,255,255,.35);
+}
+
+/* Mobile overrides */
+@media(max-width:768px){
+  .rec-slide{padding:0 3rem}
+  .rec-arrow{width:34px;height:34px;font-size:.9rem}
+}
+
+/* =====================================================
    EDUCATION
    ===================================================== */
 .edu-row{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem}
@@ -875,8 +1046,9 @@ footer{
   <a class="sdot" data-label="Skills"         data-sec="skills"         href="#skills"></a>
   <a class="sdot" data-label="Open Source"    data-sec="opensource"     href="#opensource"></a>
   <a class="sdot" data-label="Certifications" data-sec="certifications" href="#certifications"></a>
-  <a class="sdot" data-label="Education"      data-sec="education"      href="#education"></a>
-  <a class="sdot" data-label="Contact"        data-sec="contact"        href="#contact"></a>
+  <a class="sdot" data-label="Education"       data-sec="education"       href="#education"></a>
+  <a class="sdot" data-label="Recommendations" data-sec="recommendations" href="#recommendations"></a>
+  <a class="sdot" data-label="Contact"         data-sec="contact"         href="#contact"></a>
 </div>
 
 <!-- ======================================================
@@ -891,6 +1063,7 @@ footer{
     <li><a href="#opensource">Open Source</a></li>
     <li><a href="#certifications">Certifications</a></li>
     <li><a href="#education">Education</a></li>
+    <li><a href="#recommendations">Recommendations</a></li>
     <li><a href="#contact">Contact</a></li>
   </ul>
   <div class="t-wrap" onclick="toggleTheme()">
@@ -1431,6 +1604,41 @@ footer{
 </section>
 
 <!-- ======================================================
+     RECOMMENDATIONS
+     ====================================================== -->
+<section class="sec snap-page" id="recommendations">
+  <div class="sec-ey rev"><div class="se-line"></div><span class="se-txt">Social Proof</span></div>
+  <h2 class="sh rev">LinkedIn Recommendations</h2>
+
+  <!-- Carousel -->
+  <div class="rec-stage rev">
+    <div class="rec-track" id="recTrack">
+      <!-- Slides are generated dynamically — add as many screenshots as you have -->
+      <!-- Naming: images/recommendations/1.jpg, 2.jpg, 3.jpg ... -->
+    </div>
+
+    <!-- Navigation -->
+    <button class="rec-arrow rec-prev" id="recPrev" aria-label="Previous">&#8592;</button>
+    <button class="rec-arrow rec-next" id="recNext" aria-label="Next">&#8594;</button>
+
+    <!-- Dot indicators -->
+    <div class="rec-dots" id="recDots"></div>
+
+    <!-- Slide counter -->
+    <div class="rec-counter" id="recCounter"></div>
+  </div>
+
+  <!-- Lightbox -->
+  <div class="rec-lightbox" id="recLightbox">
+    <button class="rec-lb-close" id="recLbClose" aria-label="Close">&#10005;</button>
+    <button class="rec-lb-arrow rec-lb-prev" id="recLbPrev" aria-label="Previous">&#8592;</button>
+    <img class="rec-lb-img" id="recLbImg" src="" alt="LinkedIn Recommendation">
+    <button class="rec-lb-arrow rec-lb-next" id="recLbNext" aria-label="Next">&#8594;</button>
+    <div class="rec-lb-hint">Click outside or press Esc to close</div>
+  </div>
+</section>
+
+<!-- ======================================================
      CONTACT
      ====================================================== -->
 <section class="sec snap-page" id="contact">
@@ -1548,7 +1756,7 @@ document.querySelectorAll('a[href^="#"]').forEach(a=>{
 /* ---- Side nav dots ---- */
 const sideNav=document.getElementById('side-nav');
 const allDots=[...document.querySelectorAll('.sdot')];
-const sections=['hero','competencies','experience','skills','opensource','certifications','education','contact']
+const sections=['hero','competencies','experience','skills','opensource','certifications','education','recommendations','contact']
   .map(id=>document.getElementById(id)).filter(Boolean);
 
 function setActiveDot(id){
@@ -1616,7 +1824,150 @@ if(strip){
   },{ root:ioRoot(), threshold:0.4 }).observe(strip);
 }
 
-/* ---- Stagger card children ---- */
+/* ---- Recommendations Carousel ---- */
+(function(){
+  // ── Config: set how many screenshots you have ──────────────────────
+  const TOTAL   = 7;      // change this to match your actual file count
+  const FOLDER  = 'images/recommendations/';
+  const EXT     = 'png';  // change to 'png' if needed
+  const AUTOPLAY_MS = 6000;
+  // ───────────────────────────────────────────────────────────────────
+
+  const track   = document.getElementById('recTrack');
+  const dotsWrap= document.getElementById('recDots');
+  const counter = document.getElementById('recCounter');
+  const btnPrev = document.getElementById('recPrev');
+  const btnNext = document.getElementById('recNext');
+  const lb      = document.getElementById('recLightbox');
+  const lbImg   = document.getElementById('recLbImg');
+  const lbClose = document.getElementById('recLbClose');
+  const lbPrev  = document.getElementById('recLbPrev');
+  const lbNext  = document.getElementById('recLbNext');
+
+  if(!track) return;
+
+  let current = 0;
+  let autoTimer;
+
+  // Build slides
+  const slides = [];
+  const dots   = [];
+  for(let i=1;i<=TOTAL;i++){
+    const src = `${FOLDER}${i}.${EXT}`;
+
+    // Slide
+    const slide = document.createElement('div');
+    slide.className = 'rec-slide';
+    const img = document.createElement('img');
+    img.className = 'rec-img';
+    img.src = src;
+    img.alt = `LinkedIn Recommendation ${i}`;
+    img.loading = 'lazy';
+    img.addEventListener('click', ()=>openLightbox(i-1));
+    slide.appendChild(img);
+    track.appendChild(slide);
+    slides.push(slide);
+
+    // Dot
+    const dot = document.createElement('button');
+    dot.className = 'rec-dot' + (i===1?' active':'');
+    dot.setAttribute('aria-label', `Go to recommendation ${i}`);
+    dot.addEventListener('click', ()=>goTo(i-1));
+    dotsWrap.appendChild(dot);
+    dots.push(dot);
+  }
+
+  function render(){
+    track.style.transform = `translateX(-${current*100}%)`;
+    dots.forEach((d,i)=>d.classList.toggle('active',i===current));
+    counter.textContent = `${current+1} / ${TOTAL}`;
+    btnPrev.disabled = current===0;
+    btnNext.disabled = current===TOTAL-1;
+    lbPrev.disabled  = current===0;
+    lbNext.disabled  = current===TOTAL-1;
+  }
+
+  function goTo(n){
+    current=Math.max(0,Math.min(TOTAL-1,n));
+    render();
+    resetAuto();
+  }
+
+  btnPrev.addEventListener('click', ()=>goTo(current-1));
+  btnNext.addEventListener('click', ()=>goTo(current+1));
+
+  // Keyboard navigation (carousel + lightbox)
+  document.addEventListener('keydown', e=>{
+    if(lb.classList.contains('open')){
+      if(e.key==='ArrowLeft')  goTo(current-1);
+      if(e.key==='ArrowRight') goTo(current+1);
+      if(e.key==='Escape')     closeLightbox();
+    } else {
+      // Only hijack arrows when recommendations section is the active snap page
+      const rec=document.getElementById('recommendations');
+      if(!rec) return;
+      const r=rec.getBoundingClientRect();
+      if(r.top>-50 && r.top<50){
+        if(e.key==='ArrowLeft')  goTo(current-1);
+        if(e.key==='ArrowRight') goTo(current+1);
+      }
+    }
+  });
+
+  // Touch/swipe support
+  let touchStartX=0;
+  track.addEventListener('touchstart', e=>{ touchStartX=e.touches[0].clientX; },{passive:true});
+  track.addEventListener('touchend',   e=>{
+    const dx=e.changedTouches[0].clientX - touchStartX;
+    if(Math.abs(dx)>50) goTo(current + (dx<0?1:-1));
+  });
+
+  // Autoplay — state machine so hover AND lightbox both pause correctly
+  let isHovered = false;
+  let isLightboxOpen = false;
+
+  function startAuto(){
+    clearInterval(autoTimer);
+    // Only run when neither hovered nor lightbox open
+    if(!isHovered && !isLightboxOpen){
+      autoTimer = setInterval(()=>goTo(current===TOTAL-1?0:current+1), AUTOPLAY_MS);
+    }
+  }
+  function resetAuto(){ clearInterval(autoTimer); startAuto(); }
+  function pauseAuto(){ clearInterval(autoTimer); }
+
+  // Use rec-stage (not just track) so arrows are included in hover zone
+  const stage = track.closest('.rec-stage') || track.parentElement;
+  stage.addEventListener('mouseenter', ()=>{ isHovered=true;  pauseAuto(); });
+  stage.addEventListener('mouseleave', ()=>{ isHovered=false; startAuto(); });
+
+  // ── Lightbox ──────────────────────────────────────────────────────
+  function openLightbox(idx){
+    current=idx;
+    lbImg.src=slides[idx].querySelector('img').src;
+    lb.classList.add('open');
+    isLightboxOpen=true;
+    pauseAuto();
+    render();
+  }
+  function closeLightbox(){
+    lb.classList.remove('open');
+    isLightboxOpen=false;
+    // Resume only if mouse isn't still hovering over stage
+    startAuto();
+  }
+
+  lbClose.addEventListener('click', closeLightbox);
+  lbPrev.addEventListener('click', ()=>{ goTo(current-1); lbImg.src=slides[current].querySelector('img').src; });
+  lbNext.addEventListener('click', ()=>{ goTo(current+1); lbImg.src=slides[current].querySelector('img').src; });
+
+  // Close on backdrop click
+  lb.addEventListener('click', e=>{ if(e.target===lb) closeLightbox(); });
+
+  // Init
+  render();
+  startAuto();
+})();
 ['.cg','.edu-row','.certs-row','.os-stat-grid'].forEach(sel=>{
   const g=document.querySelector(sel);
   if(g)Array.from(g.children).forEach((c,i)=>c.style.transitionDelay=(i*.10)+'s');
